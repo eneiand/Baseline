@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>54798f04-3187-462a-b008-3cbce04eb39b</ProjectGuid>
+    <ProjectGuid>{D44196A4-9CE2-40ED-9F05-B90DFDCE72D3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Command_Line</RootNamespace>
-    <AssemblyName>Command_Line</AssemblyName>
+    <AssemblyName>Command Line</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

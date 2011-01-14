@@ -40,8 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="CodeGeneration\NUnitTestSuiteWriter.cs" />
+    <Compile Include="CodeGeneration\TestSuiteWriter.cs" />
+    <Compile Include="ObjectCreation\MethodCall.cs" />
+    <Compile Include="ObjectCreation\MethodCalls.cs" />
+    <Compile Include="ObjectCreation\ObjectInstance.cs" />
+    <Compile Include="ObjectCreation\ObjectMetaData.cs" />
+    <Compile Include="TestHarness\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHarness\UnitTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
