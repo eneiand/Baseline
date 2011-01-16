@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Baseline.ObjectCreation
 {
-    private class MethodCall
+    internal class MethodCall
     {
         private MethodInfo m_Method;
         private List<ObjectInstance> m_Arguments;

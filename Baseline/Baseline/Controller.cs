@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Baseline.ObjectCreation
+namespace Baseline
 {
-    private class ObjectMetaData
+    class Controller
     {
     }
 }
