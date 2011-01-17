@@ -47,6 +47,9 @@
     <Compile Include="ObjectCreation\MethodCalls.cs" />
     <Compile Include="ObjectCreation\ObjectInstance.cs" />
     <Compile Include="ObjectCreation\ObjectCreationData.cs" />
+    <Compile Include="TestHarness\ConstructorTest.cs" />
+    <Compile Include="TestHarness\ExceptionThrowingTest.cs" />
+    <Compile Include="TestHarness\MethodTest.cs" />
     <Compile Include="TestHarness\Tester.cs" />
     <Compile Include="TestHarness\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
