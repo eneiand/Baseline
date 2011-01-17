@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Baseline.ObjectCreation;
+using Baseline.TypeAnalysis.ObjectInstantiation;
 
 namespace Tests.UnitTests
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Baseline.ObjectCreation;
+using Baseline.TypeAnalysis.ObjectInstantiation;
 
 namespace Baseline.TestHarness.UnitTests
 {

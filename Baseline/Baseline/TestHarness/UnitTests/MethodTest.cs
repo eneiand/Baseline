@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Baseline.ObjectCreation;
+using Baseline.TypeAnalysis.ObjectInstantiation;
 
 namespace Baseline.TestHarness.UnitTests
 {
@@ -14,7 +14,8 @@ namespace Baseline.TestHarness.UnitTests
             if (instance != null)
                 if (instance.Instance.GetType() != method.ReflectedType)
                     throw new ArgumentException("instance type does not match method reflected type");
-
+            
+            Instance = instance;
 
             if(result != null && method.ReturnType == typeof(void)) throw new ArgumentException("result must be null or Void for this method", "result");
             if (result == null && method.ReturnType != typeof(void))
@@ -26,7 +27,12 @@ namespace Baseline.TestHarness.UnitTests
             Result = result;
         }
 
-       
+
+        public ObjectInstance Instance
+        {
+            get;
+            private set;
+        }
 
         public Object Result
         {
