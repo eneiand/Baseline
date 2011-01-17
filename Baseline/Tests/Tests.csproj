@@ -45,8 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\ConstructorTestTests.cs" />
+    <Compile Include="UnitTests\MethodTestTests.cs" />
     <Compile Include="UnitTests\ObjectCreationDataTests.cs" />
     <Compile Include="UnitTests\ObjectInstanceTests.cs" />
+    <Compile Include="UnitTests\ExceptionThrowingTestTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTests\" />

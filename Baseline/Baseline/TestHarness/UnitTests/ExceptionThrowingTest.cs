@@ -5,7 +5,7 @@ using Baseline.ObjectCreation;
 
 namespace Baseline.TestHarness.UnitTests
 {
-    public sealed class ExceptionThrowingTest : MethodTest
+    public sealed class ExceptionThrowingTest : UnitTest
     {
         
         public ExceptionThrowingTest(TimeSpan runningTime, MethodBase method, Exception thrownException,
