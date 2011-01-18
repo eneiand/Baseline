@@ -22,7 +22,7 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
 
         public static bool NeedsConstructor(Type type)
         {
-            return !(type.IsPrimitive);
+            return !(type.IsPrimitive || type == typeof(Decimal));
         }
 
         public bool InstanceNeedsConstructor
@@ -39,6 +39,11 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
         {
             get;
             private set;
+        }
+
+        public override string ToString()
+        {
+            return Instance.ToString();
         }
     }
 }

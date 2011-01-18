@@ -1,19 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
+using Baseline.TestHarness;
 
-namespace Baseline.TestHarness
+namespace Baseline.TypeAnalysis
 {
     class Tester
     {
-        public static TestSuite GenerateTests(Type t)
+        private readonly TestValueCalculator m_RangeCalculator;
+
+        public Tester(TestValueCalculator rangeCalculator)
+        {
+            if (rangeCalculator == null) throw new ArgumentNullException("rangeCalculator");
+            m_RangeCalculator = rangeCalculator;
+        }
+
+        public Tester() : this(new DefaultTestValueCalculator())
+        {
+        }
+
+        public TestSuite GenerateTests(Type t)
         {
             throw new NotImplementedException();
         }
 
-        public static List<TestSuite> GenerateTests(Assembly a)
+        public List<TestSuite> GenerateTests(Assembly a)
         {
             List<TestSuite> testSuites = new List<TestSuite>();
 

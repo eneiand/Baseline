@@ -43,6 +43,7 @@
     <Compile Include="CodeGeneration\NUnitTestSuiteWriter.cs" />
     <Compile Include="CodeGeneration\TestSuiteWriter.cs" />
     <Compile Include="Controller.cs" />
+    <Compile Include="TypeAnalysis\DefaultTestValueCalculator.cs" />
     <Compile Include="TypeAnalysis\MethodCalling\MethodCall.cs" />
     <Compile Include="TypeAnalysis\MethodCalling\MethodCalls.cs" />
     <Compile Include="TypeAnalysis\ObjectInstantiation\ObjectInstance.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="TestHarness\UnitTests\ConstructorTest.cs" />
     <Compile Include="TestHarness\UnitTests\ExceptionThrowingTest.cs" />
     <Compile Include="TestHarness\UnitTests\MethodTest.cs" />
+    <Compile Include="TypeAnalysis\TestValueCalculator.cs" />
     <Compile Include="TypeAnalysis\Tester.cs" />
     <Compile Include="TestHarness\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
