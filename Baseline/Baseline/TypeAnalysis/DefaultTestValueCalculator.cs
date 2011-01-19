@@ -13,12 +13,23 @@ namespace Baseline.TypeAnalysis
 
         protected override List<ObjectInstance> GetStringTestValues()
         {
-            throw new NotImplementedException();
+            return new List<ObjectInstance>()
+            {
+                new ObjectInstance(""),
+                new ObjectInstance(@" "),
+                new ObjectInstance("TEST_STRING"),
+                new ObjectInstance("1234567890")
+            };
         }
 
         protected override List<ObjectInstance> GetObjectTestValues()
         {
-            throw new NotImplementedException();
+            var vals = new List<ObjectInstance>(GetStringTestValues());
+
+            vals.AddRange(GetDecimalTestValues());
+            vals.AddRange(GetBoolTestValues());
+
+            return vals;
         }
 
         protected override List<ObjectInstance> GetDecimalTestValues()
