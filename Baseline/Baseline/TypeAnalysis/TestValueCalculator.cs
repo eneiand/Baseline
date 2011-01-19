@@ -27,7 +27,8 @@ namespace Baseline.TypeAnalysis
 
         public List<ObjectInstance> GetTestValues(Type t)
         {
-
+            if (t.IsEnum)
+                return GetEnumTestValues(t);
             if (t == SBYTE_TYPE)
                 return GetSByteTestValues();
             if (t == BYTE_TYPE)
@@ -58,9 +59,13 @@ namespace Baseline.TypeAnalysis
                 return GetObjectTestValues();
             if (t == STRING_TYPE)
                 return GetStringTestValues();
+      
             
             return GetTestValuesFor(t);
         }
+
+        protected abstract List<ObjectInstance> GetEnumTestValues(Type type);
+
 
         protected abstract List<ObjectInstance> GetTestValuesFor(Type type);
 

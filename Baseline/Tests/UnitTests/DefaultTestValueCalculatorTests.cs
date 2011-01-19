@@ -12,6 +12,25 @@ namespace Tests.UnitTests
         private readonly TestValueCalculator m_TestValueCalc = new DefaultTestValueCalculator();
 
         [Test]
+        public void EnumTest()
+        {
+            List<Object> enumValues = new List<Object>
+                ();
+
+            foreach(var e in Enum.GetValues(typeof(StringComparison)))
+            {
+                enumValues.Add(e);
+            }
+            
+            List<ObjectInstance> vals = m_TestValueCalc.GetTestValues(typeof(StringComparison));
+            Assert.That(vals.Count == enumValues.Count);
+            for (int i = 0; i < vals.Count; ++i)
+            {
+                Assert.That(vals[i].Instance, Is.EqualTo(enumValues[i]));
+            }
+        }
+
+        [Test]
         public void BoolTest()
         {
             List<ObjectInstance> vals = m_TestValueCalc.GetTestValues(TestValueCalculator.BOOL_TYPE);

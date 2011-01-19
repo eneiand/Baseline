@@ -22,7 +22,8 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
 
         public static bool NeedsConstructor(Type type)
         {
-            return !(type.IsPrimitive || type == typeof(Decimal) || type ==typeof(String));
+            return !(type.IsPrimitive || type == typeof(Decimal) 
+                || type ==typeof(String) || type.IsEnum);
         }
 
         public bool InstanceNeedsConstructor
