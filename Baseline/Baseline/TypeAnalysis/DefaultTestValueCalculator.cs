@@ -64,55 +64,7 @@ namespace Baseline.TypeAnalysis
             return values;
         }
 
-        private static object[] GetArguments(List<ObjectInstance> paramCombination)
-        {
-            List<Object> arguments = new List<object>();
 
-            foreach (ObjectInstance objectInstance in paramCombination)
-            {
-                arguments.Add(objectInstance.Instance);
-            }
-            return arguments.ToArray();
-        }
-
-        private static object[] GetArguments(ObjectInstance[] paramCombination)
-        {
-            return GetArguments(new List<ObjectInstance>(paramCombination));
-        }
-
-        // i is used for recursion, for the initial call this should be 0
-        private static List<List<ObjectInstance>> CalculateCombinations(List<List<ObjectInstance>> input, int i)
-        {
-            // stop condition
-            if (i == input.Count)
-            {
-                // return a list with an empty list
-                var r = new List<List<ObjectInstance>>();
-                r.Add(new List<ObjectInstance>());
-                return r;
-            }
-
-            var result = new List<List<ObjectInstance>>();
-            List<List<ObjectInstance>> recursive = CalculateCombinations(input, i + 1); // recursive call
-
-            // for each element of the first list of input
-            for (int j = 0; j < input[i].Count; j++)
-            {
-                // add the element to all combinations obtained for the rest of the lists
-                for (int k = 0; k < recursive.Count; k++)
-                {
-                    // copy a combination from recursive
-                    var newList = new List<ObjectInstance>();
-                    foreach (ObjectInstance obj in recursive[k]) newList.Add(obj);
-                    // add element of the first list
-                    newList.Add(input[i][j]);
-                    // add new combination to result
-                    result.Add(newList);
-                }
-            }
-
-            return result;
-        }
 
         protected override List<ObjectInstance> GetEnumTestValues(Type type)
         {
@@ -237,6 +189,51 @@ namespace Baseline.TypeAnalysis
                 new ObjectInstance(t.GetField("MaxValue").GetValue(null)),
                 new ObjectInstance(t.GetField("MinValue").GetValue(null))
             };
+        }
+
+        private static object[] GetArguments(List<ObjectInstance> paramCombination)
+        {
+            List<Object> arguments = new List<object>();
+
+            foreach (ObjectInstance objectInstance in paramCombination)
+            {
+                arguments.Add(objectInstance.Instance);
+            }
+            return arguments.ToArray();
+        }
+
+        // i is used for recursion, for the initial call this should be 0
+        private static List<List<ObjectInstance>> CalculateCombinations(List<List<ObjectInstance>> input, int i)
+        {
+            // stop condition
+            if (i == input.Count)
+            {
+                // return a list with an empty list
+                var r = new List<List<ObjectInstance>>();
+                r.Add(new List<ObjectInstance>());
+                return r;
+            }
+
+            var result = new List<List<ObjectInstance>>();
+            List<List<ObjectInstance>> recursive = CalculateCombinations(input, i + 1); // recursive call
+
+            // for each element of the first list of input
+            for (int j = 0; j < input[i].Count; j++)
+            {
+                // add the element to all combinations obtained for the rest of the lists
+                for (int k = 0; k < recursive.Count; k++)
+                {
+                    // copy a combination from recursive
+                    var newList = new List<ObjectInstance>();
+                    foreach (ObjectInstance obj in recursive[k]) newList.Add(obj);
+                    // add element of the first list
+                    newList.Add(input[i][j]);
+                    // add new combination to result
+                    result.Add(newList);
+                }
+            }
+
+            return result;
         }
     }
 }

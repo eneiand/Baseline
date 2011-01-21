@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using Baseline.TypeAnalysis;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 using NUnit.Framework;
+using Tests.Mocks;
 
 namespace Tests.UnitTests
 {
     [TestFixture]
-    internal class DefaultTestValueCalculatorTests
+    internal class DefaultTestValueCalculatorPrimitiveTypeTests
     {
         private readonly TestValueCalculator m_TestValueCalc = new DefaultTestValueCalculator();
 
@@ -181,5 +182,7 @@ namespace Tests.UnitTests
             Assert.That(vals[10].Instance, Is.False);
 
         }
+
+
     }
 }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 using System.Reflection;
 
-namespace Tests.UnitTests
+namespace Tests.UnitTests.TestHarnessTests
 {
      [TestFixture]
     class MethodTestTests

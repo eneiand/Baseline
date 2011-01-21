@@ -3,7 +3,7 @@ using System.Reflection;
 using Baseline.TestHarness.UnitTests;
 using NUnit.Framework;
 
-namespace Tests.UnitTests
+namespace Tests.UnitTests.TestHarnessTests
 {
     [TestFixture]
     internal class ExceptionThrowingTestTests

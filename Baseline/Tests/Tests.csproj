@@ -44,17 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\ConstructorTestTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\ConstructorTestTests.cs" />
-    <Compile Include="UnitTests\DefaultTestValueCalculatorTests.cs" />
-    <Compile Include="UnitTests\MethodTestTests.cs" />
-    <Compile Include="UnitTests\ObjectCreationDataTests.cs" />
-    <Compile Include="UnitTests\ObjectInstanceTests.cs" />
-    <Compile Include="UnitTests\ExceptionThrowingTestTests.cs" />
+    <Compile Include="UnitTests\TestHarnessTests\ConstructorTestTests.cs" />
+    <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorNonPrimitiveTypeTests.cs" />
+    <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorPrimitiveTypeTests.cs" />
+    <Compile Include="UnitTests\TestHarnessTests\MethodTestTests.cs" />
+    <Compile Include="UnitTests\TypeAnalysisTests\ObjectCreationDataTests.cs" />
+    <Compile Include="UnitTests\TypeAnalysisTests\ObjectInstanceTests.cs" />
+    <Compile Include="UnitTests\TestHarnessTests\ExceptionThrowingTestTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTests\" />
-    <Folder Include="Mocks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Baseline\Baseline.csproj">
