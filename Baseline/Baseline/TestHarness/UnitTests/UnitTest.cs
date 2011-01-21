@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 
-
-namespace Baseline.TestHarness
+namespace Baseline.TestHarness.UnitTests
 {
     public abstract class UnitTest
     {

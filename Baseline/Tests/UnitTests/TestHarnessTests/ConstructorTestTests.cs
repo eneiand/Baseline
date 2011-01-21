@@ -24,7 +24,7 @@ namespace Tests.UnitTests.TestHarnessTests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new ConstructorTest(new TimeSpan(), typeof(String).GetConstructor(new Type[]{typeof(Char), typeof(Int32)}), 30);
+                new ConstructorTest(new TimeSpan(), typeof(List<String>).GetConstructor(Type.EmptyTypes), 30);
             }
 
                 );

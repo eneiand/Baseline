@@ -29,14 +29,13 @@ namespace Tests.UnitTests
         [Test]
         public void NonPrimitiveInstanceTest()
         {
-            String testString = new String('T', 5);
-            Type stringType = testString.GetType();
+            List<String> testList = new List<String>();
+            Type listType = testList.GetType();
 
-            var creationData = new ObjectCreationData(stringType.GetConstructor(new Type[] { typeof(Char), typeof(Int32) }),
-                new List<ObjectInstance>() { new ObjectInstance('T'), new ObjectInstance(5) });
+            var creationData = new ObjectCreationData(listType.GetConstructor(Type.EmptyTypes));
 
-            var objInstance = new ObjectInstance(testString, creationData);
-            Assert.That(objInstance.Instance, Is.SameAs(testString));
+            var objInstance = new ObjectInstance(testList, creationData);
+            Assert.That(objInstance.Instance, Is.SameAs(testList));
             Assert.That(objInstance.InstanceNeedsConstructor, Is.True);
             Assert.That(objInstance.CreationData, Is.SameAs(creationData));
         }
@@ -45,14 +44,14 @@ namespace Tests.UnitTests
         [Test]
         public void ConstructorMustMatchInstanceTest()
         {
-            String testString = new String('T', 5);
+            List<String> testList = new List<string>();
             Type t = typeof(ArgumentException);
 
             var creationData = new ObjectCreationData(t.GetConstructor(Type.EmptyTypes));
 
             Assert.Throws<ArgumentException>(() =>
             {
-                var objInstance = new ObjectInstance(testString, creationData);
+                var objInstance = new ObjectInstance(testList, creationData);
             });
            
         }
@@ -83,12 +82,19 @@ namespace Tests.UnitTests
         [Test]
         public void InstanceThatNeedsConstructorMustHaveCreationDataTest()
         {
-            String testString = "TEST";
+            List<String> testList = new List<string>();
 
            Assert.Throws<ArgumentException>(()=>{
-               var strInstance = new ObjectInstance(testString);
+               var strInstance = new ObjectInstance(testList);
            }
                );
+        }
+
+        [Test]
+        public void ToStringTest()
+        {
+            var testInstance = new ObjectInstance(12);
+            Assert.That(testInstance.ToString() == "12");
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Baseline.TestHarness.UnitTests;
 
 namespace Baseline.TestHarness
 {

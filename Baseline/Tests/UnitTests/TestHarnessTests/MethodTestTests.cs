@@ -12,25 +12,16 @@ namespace Tests.UnitTests.TestHarnessTests
     {
          private ObjectInstance m_StringInstance;
          private String m_Str;
-         private ObjectInstance m_Char;
-         private ObjectInstance m_Int;
          private Type m_StrType = typeof(String);
-         private ObjectCreationData m_ObjCreationData;
-         private ConstructorInfo m_Constructor;
          private MethodInfo m_CopyTo;
 
          [SetUp]
          public void Init()
          {
-             m_Char = new ObjectInstance('C');
-             m_Int = new ObjectInstance(5);
+            
              m_Str = new String('C', 5);
              
-             m_Constructor = m_StrType.GetConstructor(new Type[]{typeof(char), typeof(int)});
-
-             m_ObjCreationData = new ObjectCreationData(m_Constructor, new ObjectInstance[]{m_Char, m_Int});
-
-             m_StringInstance = new ObjectInstance(m_Str, m_ObjCreationData);
+             m_StringInstance = new ObjectInstance(m_Str);
              m_CopyTo = m_StrType.GetMethod("CopyTo", new Type[] { typeof(int), typeof(char[]), typeof(int), typeof(int) });
          }
 
@@ -75,12 +66,27 @@ namespace Tests.UnitTests.TestHarnessTests
                  );
          }
 
+         private class TestType
+         {
+             public TestType()
+             {
+             }
+             public void TestMethod()
+             {
+             }
+         }
+
          [Test]
          public void VoidReturnTypeDoesntMatchCharTest()
          {
+             var t = new TestType();
+             t.TestMethod();
+
              Assert.Throws<ArgumentException>(() =>
              {
-                 new MethodTest(new TimeSpan(), m_CopyTo, "TEST_STRING", null, this.m_StringInstance);
+                 new MethodTest(new TimeSpan(), typeof(TestType).GetMethod("TestMethod"), "TEST_STRING", 
+                     null,
+                    new ObjectInstance(t, new ObjectCreationData(typeof(TestType).GetConstructor(Type.EmptyTypes))));
              }
                  );
          }
@@ -88,10 +94,10 @@ namespace Tests.UnitTests.TestHarnessTests
          [Test]
          public void IntReturnTypeDoesntMatchNullTest()
          {
-             Assert.Throws<ArgumentException>(() =>
+             Assert.Throws<ArgumentNullException>(() =>
              {
                  new MethodTest(new TimeSpan(), typeof(String).GetMethod("IndexOf", new Type[] { typeof(char) }), null,
-                     new List<ObjectInstance>() { new ObjectInstance('C'), m_StringInstance });
+                     new List<ObjectInstance>() { new ObjectInstance('C') }, m_StringInstance);
              }
                  );
          }
@@ -143,6 +149,18 @@ namespace Tests.UnitTests.TestHarnessTests
              Assert.Throws<ArgumentNullException>(() =>
              {
                  new MethodTest(new TimeSpan(), method, "TEST_STRING", args);
+             });
+         }
+
+         [Test]
+         public void InstanceTypeMustMatchInstanceMethodType()
+         {
+             var args = new List<ObjectInstance>();
+             var method = typeof(String).GetMethod("Normalize", Type.EmptyTypes);
+
+             Assert.Throws<ArgumentException>(() =>
+             {
+                 new MethodTest(new TimeSpan(), method, "TEST_STRING", args,new ObjectInstance(34));
              });
          }
  

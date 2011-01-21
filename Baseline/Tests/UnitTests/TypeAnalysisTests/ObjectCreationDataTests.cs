@@ -59,5 +59,22 @@ namespace Tests.UnitTests
                 var objCreationData = new ObjectCreationData(null);
             });
         }
+
+        [Test]
+        public void ToStringTest()
+        {
+            Type stringType = typeof(String);
+            var constructor = stringType.GetConstructor(new Type[] { typeof(char), typeof(Int32) });
+            var c = new ObjectInstance('I');
+            var i = new ObjectInstance(32);
+
+            var objCreationData = new ObjectCreationData(constructor, new List<ObjectInstance>() { c, i });
+
+            var s = new StringBuilder(objCreationData.Constructor.ToString() + " ");
+
+            objCreationData.Arguments.ForEach(a => { s.Append(a); s.Append(" "); });
+
+            Assert.That(s.ToString() == objCreationData.ToString());
+        }
     }
 }
