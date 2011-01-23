@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mocks\ConstructorTestTypes.cs" />
+    <Compile Include="Mocks\MockType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\TestHarnessTests\ConstructorTestTests.cs" />
     <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorNonPrimitiveTypeTests.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="UnitTests\TypeAnalysisTests\ObjectCreationDataTests.cs" />
     <Compile Include="UnitTests\TypeAnalysisTests\ObjectInstanceTests.cs" />
     <Compile Include="UnitTests\TestHarnessTests\ExceptionThrowingTestTests.cs" />
+    <Compile Include="UnitTests\TypeAnalysisTests\TesterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTests\" />

@@ -21,7 +21,7 @@ namespace Baseline.TestHarness.UnitTests
             if (result == null && method.ReturnType != typeof(void))
                 throw new ArgumentNullException("result", "result required for this method");
             if(result !=null)
-                if(result.GetType() != method.ReturnType) throw new ArgumentException( "result type and method return type do not match", "result");
+                if(!method.ReturnType.IsAssignableFrom(result.GetType())) throw new ArgumentException( "result type and method return type do not match", "result");
 
 
             Result = result;

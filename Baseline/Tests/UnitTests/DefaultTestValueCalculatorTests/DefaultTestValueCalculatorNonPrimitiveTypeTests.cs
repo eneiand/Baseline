@@ -21,6 +21,14 @@ namespace Tests.UnitTests.DefaultTestValueCalculatorTests
 
         }
         [Test]
+        public void TypeWithDefaultConstructorThrowsExceptionTest()
+        {
+            Type d = typeof(DefaultConstructorThrowsAnExceptionTestType);
+            var testVals = m_TestValueCalc.GetTestValues(d);
+            Assert.That(testVals.Count, Is.EqualTo(0));
+
+        }
+        [Test]
         public void TypeWithPrimitiveTypeConstructorTest()
         {
             Type t = typeof(PrimitiveTypeConstructorTestType);
@@ -30,6 +38,24 @@ namespace Tests.UnitTests.DefaultTestValueCalculatorTests
             Assert.That((Int32)(testVals[1].Instance as PrimitiveTypeConstructorTestType).I == Int32.MinValue);
 
             
+        }
+
+        [Test]
+        public void TypeWithMultiplePrimitiveTypeConstructorTest()
+        {
+            Type t = typeof(MultiplePrimitiveTypeConstructorTestType);
+            var testVals = m_TestValueCalc.GetTestValues(t);
+            Assert.That(testVals.Count == 4);
+
+
+        }
+
+        [Test]
+        public void TypeWithPrimitiveTypeConstructorThrowsConstructorTest()
+        {
+            Type t = typeof(PrimitiveTypeConstructorThrowsAnExceptionTestType);
+            var testVals = m_TestValueCalc.GetTestValues(t);
+            Assert.That(testVals.Count == 0);
         }
     }
 }

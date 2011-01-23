@@ -13,6 +13,14 @@ namespace Tests.Mocks
         }
     }
 
+    class DefaultConstructorThrowsAnExceptionTestType
+    {
+        public DefaultConstructorThrowsAnExceptionTestType()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     class PrimitiveTypeConstructorTestType
     {
         public Int32 I
@@ -23,6 +31,32 @@ namespace Tests.Mocks
         public PrimitiveTypeConstructorTestType(Int32 i)
         {
             I = i;
+        }
+    }
+
+    class MultiplePrimitiveTypeConstructorTestType
+    {
+        public Int32 I
+        {
+            get;
+            private set;
+        }
+
+        public char C { get; set; }
+
+        public MultiplePrimitiveTypeConstructorTestType(Int32 i, char c)
+        {
+            I = i;
+            C = c;
+        }
+    }
+
+    class PrimitiveTypeConstructorThrowsAnExceptionTestType
+    {
+
+        public PrimitiveTypeConstructorThrowsAnExceptionTestType(Int32 i)
+        {
+            throw new NotImplementedException();
         }
     }
 
