@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Baseline.TypeAnalysis;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 using NUnit.Framework;
-using Tests.Mocks;
 
 namespace Tests.UnitTests
 {

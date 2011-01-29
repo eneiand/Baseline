@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Baseline.TypeAnalysis;
 using NUnit.Framework;
-using Tests.Mocks;
+using TestAssembly.Mocks;
 
 namespace Tests.UnitTests.TypeAnalysisTests
 {
@@ -17,6 +18,13 @@ namespace Tests.UnitTests.TypeAnalysisTests
         public void Init()
         {
             m_Tester = new Tester();
+        }
+
+        [Test]
+        public void GenerateTestsThrowsArgumentNullExceptionTest()
+        {
+            Type t = null;
+            Assert.Throws<ArgumentNullException>(() => m_Tester.GenerateTests(t));
         }
 
         [Test]
@@ -58,6 +66,25 @@ namespace Tests.UnitTests.TypeAnalysisTests
             {
                 Assert.That(testSuite.Tests.FindAll(t => methodInfo.Name == t.Method.Name).Count >= 1);
             }
+
+
+        }
+
+        [Test]
+        public void GenerateTestsAssembly()
+        {
+            var mockType = typeof (MockType);
+            Assembly testAssembly = Assembly.GetAssembly(mockType);
+            Console.WriteLine("Testing Assembly : " + testAssembly.FullName);
+
+            var testSuites = m_Tester.GenerateTests(testAssembly);
+
+            foreach (var type in testAssembly.GetTypes())
+            {
+                Assert.That(testSuites.Find(t => t.Type == type) != null);
+            }
+
+           
 
 
         }

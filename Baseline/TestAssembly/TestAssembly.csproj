@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{921E010E-0BC3-4024-BAEC-14A1BEBFB89E}</ProjectGuid>
+    <ProjectGuid>{B83070AB-48AA-465C-8EDA-4A9DB3BEE80E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>TestAssembly</RootNamespace>
+    <AssemblyName>TestAssembly</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\Nunit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,29 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\ConstructorTestTypes.cs" />
+    <Compile Include="Mocks\MockType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\TestHarnessTests\ConstructorTestTests.cs" />
-    <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorNonPrimitiveTypeTests.cs" />
-    <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorPrimitiveTypeTests.cs" />
-    <Compile Include="UnitTests\TestHarnessTests\MethodTestTests.cs" />
-    <Compile Include="UnitTests\TestHarnessTests\TestSuiteTests.cs" />
-    <Compile Include="UnitTests\TypeAnalysisTests\ObjectCreationDataTests.cs" />
-    <Compile Include="UnitTests\TypeAnalysisTests\ObjectInstanceTests.cs" />
-    <Compile Include="UnitTests\TestHarnessTests\ExceptionThrowingTestTests.cs" />
-    <Compile Include="UnitTests\TypeAnalysisTests\TesterTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Baseline\Baseline.csproj">
-      <Project>{CA7BA605-2359-4D6A-9A0D-7A120B3D3AEC}</Project>
-      <Name>Baseline</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestAssembly\TestAssembly.csproj">
-      <Project>{B83070AB-48AA-465C-8EDA-4A9DB3BEE80E}</Project>
-      <Name>TestAssembly</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Tests.Mocks
+namespace TestAssembly.Mocks
 {
-    class DefaultConstructorTestType
+    public class DefaultConstructorTestType
     {
         public DefaultConstructorTestType()
         {
@@ -13,15 +10,16 @@ namespace Tests.Mocks
         }
     }
 
-    class DefaultConstructorThrowsAnExceptionTestType
+    public class DefaultConstructorThrowsAnExceptionTestType
     {
         public DefaultConstructorThrowsAnExceptionTestType()
         {
             throw new NotImplementedException();
         }
+ 
     }
 
-    class PrimitiveTypeConstructorTestType
+    public class PrimitiveTypeConstructorTestType
     {
         public Int32 I
         {
@@ -34,7 +32,7 @@ namespace Tests.Mocks
         }
     }
 
-    class MultiplePrimitiveTypeConstructorTestType
+    public class MultiplePrimitiveTypeConstructorTestType
     {
         public Int32 I
         {
@@ -51,7 +49,7 @@ namespace Tests.Mocks
         }
     }
 
-    class PrimitiveTypeConstructorThrowsAnExceptionTestType
+    public class PrimitiveTypeConstructorThrowsAnExceptionTestType
     {
 
         public PrimitiveTypeConstructorThrowsAnExceptionTestType(Int32 i)

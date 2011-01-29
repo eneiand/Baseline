@@ -17,8 +17,8 @@ namespace Baseline.TestHarness
             Type = t;
             Tests = new List<UnitTest>(tests);
 
-            if (Tests.Count == 0)
-                throw new ArgumentException("tests must not be empty");
+          //  if (Tests.Count == 0)
+            //    throw new ArgumentException("tests must not be empty");
 
         }
 

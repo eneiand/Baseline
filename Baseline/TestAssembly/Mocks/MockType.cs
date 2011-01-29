@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
-namespace Tests.Mocks
+namespace TestAssembly.Mocks
 {
     public class MockType
     {
@@ -14,8 +11,9 @@ namespace Tests.Mocks
         public MockType(int i)
         {}
 
-        private void PrivateMethod()
+        public MockType(char c)
         {
+            throw new ArgumentException("don't use this constructor", "c");
         }
 
         public void VoidReturnType(){}
