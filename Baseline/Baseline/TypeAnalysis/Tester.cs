@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Baseline.TestHarness;
 using Baseline.TestHarness.UnitTests;
 using Baseline.TypeAnalysis.ObjectInstantiation;
@@ -29,41 +30,103 @@ namespace Baseline.TypeAnalysis
 
             var tests = new List<UnitTest>();
 
-            tests.AddRange(TestConstructors(t.GetConstructors()));
-            tests.AddRange(TestMethods(t.GetMethods()));
+            var constructorsDoneEvent = new ManualResetEvent(false);
+            var methodsDoneEvent = new ManualResetEvent(false);
+
+            ThreadPool.QueueUserWorkItem((w) =>
+                                             {
+                                                 List<UnitTest> constructorTests = TestConstructors(t.GetConstructors());
+                                                 lock (tests)
+                                                 {
+                                                     tests.AddRange(constructorTests);
+                                                 }
+                                                 constructorsDoneEvent.Set();
+                                             });
+
+            ThreadPool.QueueUserWorkItem((w) =>
+                                             {
+                                                 IEnumerable<UnitTest> methodTests = TestMethods(t.GetMethods());
+                                                 lock (tests)
+                                                 {
+                                                     tests.AddRange(methodTests);
+                                                 }
+                                                 methodsDoneEvent.Set();
+                                             });
+
+
+            WaitHandle.WaitAll(new WaitHandle[] {constructorsDoneEvent, methodsDoneEvent});
 
             return new TestSuite(t, tests);
         }
 
-        private IEnumerable<UnitTest> TestMethods(IEnumerable<MethodInfo> methods)
+        private List<UnitTest> TestMethods(MethodInfo[] methods)
         {
             var tests = new List<UnitTest>();
 
-            foreach (MethodInfo method in methods)
-            {
-                ParameterInfo[] parameters = method.GetParameters();
-                List<List<ObjectInstance>> argumentCombinations = CalculateCombinations(parameters);
+            int numTasks = methods.Length;
 
-                foreach (var argumentCombination in argumentCombinations)
+            if (methods.Length > 0)
+            {
+                using (var finishedEvent = new ManualResetEvent(false))
                 {
-                    foreach (ObjectInstance objectInstance in GetInstancesFor(method))
+                    for (int i = 0; i < methods.Length; ++i)
                     {
-                        var timer = new Stopwatch();
-                        try
-                        {
-                            timer.Start();
-                            object result = method.Invoke(objectInstance == null ? null : objectInstance.Instance,
-                                                          GetArguments(argumentCombination));
-                            timer.Stop();
-                            tests.Add(new MethodTest(timer.Elapsed, method, result, argumentCombination,
-                                                     objectInstance));
-                        }
-                        catch (Exception e)
-                        {
-                            timer.Stop();
-                            tests.Add(new ExceptionThrowingTest(timer.Elapsed, method, e, argumentCombination));
-                        }
+                        MethodInfo method = methods[i];
+
+                        ThreadPool.QueueUserWorkItem(w =>
+                                                         {
+                                                             ParameterInfo[] parameters = method.GetParameters();
+                                                             List<List<ObjectInstance>> argumentCombinations =
+                                                                 CalculateCombinations(parameters);
+
+                                                             foreach (var argumentCombination in argumentCombinations)
+                                                             {
+                                                                 foreach (
+                                                                     ObjectInstance objectInstance in
+                                                                         GetInstancesFor(method))
+                                                                 {
+                                                                     var timer = new Stopwatch();
+                                                                     try
+                                                                     {
+                                                                         timer.Start();
+                                                                         object result =
+                                                                             method.Invoke(
+                                                                                 objectInstance == null
+                                                                                     ? null
+                                                                                     : objectInstance.Instance,
+                                                                                 GetArguments(argumentCombination));
+                                                                         timer.Stop();
+
+                                                                         lock (tests)
+                                                                         {
+                                                                             tests.Add(new MethodTest(timer.Elapsed,
+                                                                                                      method,
+                                                                                                      result,
+                                                                                                      argumentCombination,
+                                                                                                      objectInstance));
+                                                                         }
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+                                                                         timer.Stop();
+                                                                         lock (tests)
+                                                                         {
+                                                                             tests.Add(
+                                                                                 new ExceptionThrowingTest(
+                                                                                     timer.Elapsed,
+                                                                                     method, e,
+                                                                                     argumentCombination));
+                                                                         }
+                                                                     }
+                                                                 }
+                                                             }
+                                                             if (Interlocked.Decrement(ref numTasks) == 0)
+                                                                 finishedEvent.Set();
+                                                         });
                     }
+
+
+                    finishedEvent.WaitOne();
                 }
             }
 
@@ -84,38 +147,73 @@ namespace Baseline.TypeAnalysis
             return objs;
         }
 
-        private List<UnitTest> TestConstructors(IEnumerable<ConstructorInfo> constructors)
+        private List<UnitTest> TestConstructors(ConstructorInfo[] constructors)
         {
             var tests = new List<UnitTest>();
-            foreach (ConstructorInfo constructorInfo in constructors)
+            int numTasks = constructors.Length;
+
+            if (constructors.Length > 0)
             {
-                ParameterInfo[] parameters = constructorInfo.GetParameters();
-                List<List<ObjectInstance>> argumentCombinations = CalculateCombinations(parameters);
-                
-                if(parameters.Count() == 0)
-                {   //adding an empty argument list for the default constructor
-                    argumentCombinations.Add(new List<ObjectInstance>());
-                }
-
-
-                foreach (var argumentCombination in argumentCombinations)
+                using (var finishedEvent = new ManualResetEvent(false))
                 {
-                    var timer = new Stopwatch();
-                    try
+                    for (int i = 0; i < constructors.Length; ++i)
                     {
-                        timer.Start();
-                        object instance = constructorInfo.Invoke(GetArguments(argumentCombination));
-                        timer.Stop();
-                        tests.Add(new ConstructorTest(timer.Elapsed, constructorInfo, instance, argumentCombination));
+                        ConstructorInfo constructorInfo = constructors[i];
+
+                        ThreadPool.QueueUserWorkItem(w =>
+                                                         {
+                                                             ParameterInfo[] parameters =
+                                                                 constructorInfo.GetParameters();
+                                                             List<List<ObjectInstance>> argumentCombinations =
+                                                                 CalculateCombinations(parameters);
+
+                                                             if (parameters.Count() == 0)
+                                                             {
+                                                                 //adding an empty argument list for the default constructor
+                                                                 argumentCombinations.Add(new List<ObjectInstance>());
+                                                             }
+
+
+                                                             foreach (var argumentCombination in argumentCombinations)
+                                                             {
+                                                                 var timer = new Stopwatch();
+                                                                 try
+                                                                 {
+                                                                     timer.Start();
+                                                                     object instance =
+                                                                         constructorInfo.Invoke(
+                                                                             GetArguments(argumentCombination));
+                                                                     timer.Stop();
+                                                                     lock (tests)
+                                                                     {
+                                                                         tests.Add(new ConstructorTest(timer.Elapsed,
+                                                                                                       constructorInfo,
+                                                                                                       instance,
+                                                                                                       argumentCombination));
+                                                                     }
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     timer.Stop();
+                                                                     lock (tests)
+                                                                     {
+                                                                         tests.Add(
+                                                                             new ExceptionThrowingTest(timer.Elapsed,
+                                                                                                       constructorInfo,
+                                                                                                       e,
+                                                                                                       argumentCombination));
+                                                                     }
+                                                                 }
+                                                             }
+
+                                                             if (Interlocked.Decrement(ref numTasks) == 0)
+                                                                 finishedEvent.Set();
+                                                         });
                     }
-                    catch (Exception e)
-                    {
-                        timer.Stop();
-                        tests.Add(new ExceptionThrowingTest(timer.Elapsed, constructorInfo, e, argumentCombination));
-                    }
+
+                    finishedEvent.WaitOne();
                 }
             }
-
             return tests;
         }
 
@@ -131,8 +229,29 @@ namespace Baseline.TypeAnalysis
         {
             var testSuites = new List<TestSuite>();
 
-            foreach (Type type in a.GetTypes())
-                testSuites.Add(GenerateTests(type));
+            Type[] types = a.GetTypes();
+            int numTasks = types.Length;
+
+            if (types.Length > 0)
+            {
+                using (var finishedEvent = new ManualResetEvent(false))
+                {
+                    for (int i = 0; i < types.Length; ++i)
+                    {
+                        Type type = types[i];
+                        ThreadPool.QueueUserWorkItem((w) =>
+                                                         {
+                                                             TestSuite suite = GenerateTests(type);
+                                                             lock (testSuites)
+                                                                 testSuites.Add(suite);
+                                                             if (Interlocked.Decrement(ref numTasks) == 0)
+                                                                 finishedEvent.Set();
+                                                         });
+                    }
+
+                    finishedEvent.WaitOne();
+                }
+            }
 
             return testSuites;
         }
