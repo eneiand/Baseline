@@ -114,7 +114,7 @@ namespace Baseline.TypeAnalysis
                                                                              tests.Add(
                                                                                  new ExceptionThrowingTest(
                                                                                      timer.Elapsed,
-                                                                                     method, e,
+                                                                                     method, e, objectInstance,
                                                                                      argumentCombination));
                                                                          }
                                                                      }
@@ -200,7 +200,7 @@ namespace Baseline.TypeAnalysis
                                                                          tests.Add(
                                                                              new ExceptionThrowingTest(timer.Elapsed,
                                                                                                        constructorInfo,
-                                                                                                       e,
+                                                                                                       e, null,
                                                                                                        argumentCombination));
                                                                      }
                                                                  }

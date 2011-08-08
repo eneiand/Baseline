@@ -7,7 +7,7 @@ namespace Baseline.TestHarness.UnitTests
 {
     public abstract class UnitTest
     {
-         protected UnitTest(TimeSpan runningTime, MethodBase method,  IEnumerable<ObjectInstance> arguments = null)
+         protected UnitTest(TimeSpan runningTime, MethodBase method, ObjectInstance instance = null,  IEnumerable<ObjectInstance> arguments = null, Object result = null)
         {
   
             RunningTime = runningTime;
@@ -31,6 +31,16 @@ namespace Baseline.TestHarness.UnitTests
                 if (!parameterList[i].ParameterType.IsAssignableFrom(Arguments[i].Instance.GetType()))
                     throw new ArgumentException("argument types do not match parameter types");
             }
+
+            if (!method.IsConstructor)
+            {
+                if (!method.IsStatic && instance == null)
+                    throw new ArgumentException("non-static method must have an instance to be invoked on");
+                if (method.IsStatic && instance != null)
+                    throw new ArgumentException("static method cannot have an instance");
+            }
+             Result = result;
+             Instance = instance;
         }
 
         public TimeSpan RunningTime
@@ -50,6 +60,13 @@ namespace Baseline.TestHarness.UnitTests
             get;
             private set;
         }
+
+        public ObjectInstance Instance
+        {
+            get; private set; 
+        }
+
+        public Object Result { get; private set; }
 
         public virtual String Name
         {

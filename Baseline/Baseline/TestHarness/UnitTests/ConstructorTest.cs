@@ -7,18 +7,15 @@ namespace Baseline.TestHarness.UnitTests
 {
     public sealed class ConstructorTest : UnitTest
     {
-        public ConstructorTest(TimeSpan runningTime, ConstructorInfo constructor, Object instance, IEnumerable<ObjectInstance> arguments = null)
-            : base(runningTime, constructor, arguments)
+        public ConstructorTest(TimeSpan runningTime, ConstructorInfo constructor, Object result, IEnumerable<ObjectInstance> arguments = null)
+            : base(runningTime, constructor, arguments:arguments, result:result)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
-            if (constructor.ReflectedType != instance.GetType()) throw new ArgumentException("instance type does not match constructor reflected type", "instance");
+            if (result == null) throw new ArgumentNullException("result");
+            if (constructor.ReflectedType != result.GetType()) throw new ArgumentException("instance type does not match constructor reflected type", "result");
 
-            Instance = instance;
+        
         }
 
-        public Object Instance
-        {
-            get; private set;
-        }
+
     }
 }

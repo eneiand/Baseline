@@ -9,9 +9,9 @@ namespace Baseline.TestHarness.UnitTests
     public sealed class ExceptionThrowingTest : UnitTest
     {
         
-        public ExceptionThrowingTest(TimeSpan runningTime, MethodBase method, Exception thrownException,
+        public ExceptionThrowingTest(TimeSpan runningTime, MethodBase method, Exception thrownException, ObjectInstance instance = null,
                                      IEnumerable<ObjectInstance> arguments = null)
-            : base(runningTime, method, arguments)
+            : base(runningTime, method, instance, arguments)
         {
             if (thrownException == null) throw new ArgumentNullException("thrownException");
             Exception = thrownException;

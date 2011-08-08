@@ -20,6 +20,16 @@ namespace Tests.UnitTests.CodeGenerationTests
         {
             
         }
+
+        public String Method2()
+        {
+            return "test";
+        }
+
+        public String Prop1
+        {
+            get { return "test"; }
+        }
     }
 
     [TestFixture]
@@ -33,7 +43,12 @@ namespace Tests.UnitTests.CodeGenerationTests
         [SetUp]
         public void Init()
         {
-            m_Tests.Add(new MethodTest(TimeSpan.FromMilliseconds(10), m_DummyType.GetMethod("Method1"), instance: new ObjectInstance(new DummyType(), new ObjectCreationData(m_DummyType.GetConstructor(Type.EmptyTypes)))));
+            m_Tests.Add(new MethodTest(TimeSpan.FromMilliseconds(10), m_DummyType.GetMethod("Method2"), result:"test", instance: new ObjectInstance(new DummyType(), new ObjectCreationData(m_DummyType.GetConstructor(Type.EmptyTypes)))));
+            m_Tests.Add(new ExceptionThrowingTest(TimeSpan.FromMilliseconds(10), m_DummyType.GetMethod("Method1"), new InvalidOperationException(),
+                new ObjectInstance(new DummyType(), new ObjectCreationData(m_DummyType.GetConstructor(Type.EmptyTypes)))));
+            
+            m_Tests.Add(new ConstructorTest(TimeSpan.FromMilliseconds(10), m_DummyType.GetConstructor(Type.EmptyTypes),
+                                            result:new DummyType()));
 
             m_TestSuite = new TestSuite(m_DummyType, m_Tests);
             m_TestSuiteGenerator = new TestSuiteGenerator(m_TestSuite, new NUnitUnitTestCodeWriter(), "[TestFixture]");
