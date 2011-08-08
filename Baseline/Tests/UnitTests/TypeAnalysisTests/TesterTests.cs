@@ -42,7 +42,7 @@ namespace Tests.UnitTests.TypeAnalysisTests
                                     });
         }
 
-        [Test]
+        [Test, RequiresMTA]
         public void GenerateTestsForPrimitiveTypesTest()
         {
             Type intType = typeof (Int32);
@@ -51,7 +51,7 @@ namespace Tests.UnitTests.TypeAnalysisTests
 
         }
 
-        [Test]
+        [Test, RequiresMTA]
         public void GenerateTestsForNonPrimitiveTypeTest()
         {
             Type mockType = typeof(MockType);

@@ -40,8 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGeneration\NUnitTestSuiteWriter.cs" />
-    <Compile Include="CodeGeneration\TestSuiteWriter.cs" />
+    <Compile Include="CodeGeneration\CodeWritingUtils.cs" />
+    <Compile Include="CodeGeneration\TestSuiteGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestSuiteGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeGeneration\TestSuiteGenerator_CustomConstruction.cs" />
+    <Compile Include="CodeGeneration\UnitTestCodeGeneration\NUnitUnitTestCodeWriter.cs" />
+    <Compile Include="CodeGeneration\UnitTestCodeGeneration\UnitTestCodeWriter.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="TypeAnalysis\DefaultTestValueCalculator.cs" />
     <Compile Include="TypeAnalysis\MethodCalling\MethodCall.cs" />
@@ -56,6 +63,15 @@
     <Compile Include="TestHarness\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHarness\UnitTests\UnitTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CodeGeneration\TestSuiteGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>TestSuiteGenerator.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

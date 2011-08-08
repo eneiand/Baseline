@@ -22,5 +22,10 @@ namespace Baseline.TestHarness.UnitTests
             get;
             private set;
         }
+
+        public override string Name
+        {
+            get { return String.Format("{0}{1}ThrowsExceptionTest", this.Method.DeclaringType.Name, this.Method.Name); }
+        }
     }
 }

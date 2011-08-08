@@ -1,0 +1,24 @@
+﻿<#@ template language="C#" #>
+<#@ import namespace="Baseline.TestHarness.UnitTests" #>
+using NUnit.Framework;
+using <#=  TestSuite.Type.FullName #>
+
+<#
+WriteLine("namespace " + TestSuite.Type.Name + "Tests");
+WriteLine("{");
+this.PushIndent(INDENT);
+WriteLine(this.ClassAttribute);
+WriteLine("public class " + TestSuite.Type.Name + "Tests");
+WriteLine("{");
+
+		this.PushIndent(INDENT); 
+		foreach (var unitTest in TestSuite.Tests)
+		{
+            this.WriteLine(this.UnitTestCodeWriter.GetCode(unitTest));
+		}
+		this.PopIndent();
+    
+WriteLine("}");
+this.PopIndent();
+WriteLine("}");
+#>

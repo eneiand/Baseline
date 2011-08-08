@@ -50,5 +50,10 @@ namespace Baseline.TestHarness.UnitTests
             get;
             private set;
         }
+
+        public virtual String Name
+        {
+            get { return String.Format("{0}{1}Test", this.Method.DeclaringType.Name, this.Method.Name); }
+        }
     }
 }

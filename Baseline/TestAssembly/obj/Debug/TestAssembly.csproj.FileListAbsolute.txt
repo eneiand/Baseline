@@ -3,3 +3,8 @@ C:\NA\Baseline\Baseline\TestAssembly\bin\Debug\TestAssembly.pdb
 C:\NA\Baseline\Baseline\TestAssembly\obj\Debug\ResolveAssemblyReference.cache
 C:\NA\Baseline\Baseline\TestAssembly\obj\Debug\TestAssembly.dll
 C:\NA\Baseline\Baseline\TestAssembly\obj\Debug\TestAssembly.pdb
+D:\NA\dev\Baseline\Baseline\TestAssembly\bin\Debug\TestAssembly.dll
+D:\NA\dev\Baseline\Baseline\TestAssembly\bin\Debug\TestAssembly.pdb
+D:\NA\dev\Baseline\Baseline\TestAssembly\obj\Debug\ResolveAssemblyReference.cache
+D:\NA\dev\Baseline\Baseline\TestAssembly\obj\Debug\TestAssembly.dll
+D:\NA\dev\Baseline\Baseline\TestAssembly\obj\Debug\TestAssembly.pdb
