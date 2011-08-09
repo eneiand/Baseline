@@ -36,7 +36,7 @@ namespace Tests.UnitTests.TestHarnessTests
                 var cTest = new ConstructorTest(new TimeSpan(), typeof(String).GetConstructor(new Type[] { typeof(Char), typeof(Int32) }), new String('C', 5), 
                     new List<ObjectInstance>(){new ObjectInstance('C'), new ObjectInstance(5)});
                 
-                Assert.That(cTest.Instance, Is.EqualTo("CCCCC"));
+                Assert.That(cTest.Result, Is.EqualTo("CCCCC"));
         }
     }
 }

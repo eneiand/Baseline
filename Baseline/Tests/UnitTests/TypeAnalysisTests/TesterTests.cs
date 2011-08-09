@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Baseline.CodeGeneration;
+using Baseline.CodeGeneration.UnitTestCodeGeneration;
 using Baseline.TypeAnalysis;
 using NUnit.Framework;
 using TestAssembly.Mocks;
@@ -48,7 +50,7 @@ namespace Tests.UnitTests.TypeAnalysisTests
             Type intType = typeof (Int32);
             var testSuite = m_Tester.GenerateTests(intType);
 
-
+            Console.WriteLine(new TestSuiteGenerator(testSuite, new NUnitUnitTestCodeWriter(), "TestFixture").TransformText());
         }
 
         [Test, RequiresMTA]

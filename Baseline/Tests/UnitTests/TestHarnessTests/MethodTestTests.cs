@@ -55,16 +55,6 @@ namespace Tests.UnitTests.TestHarnessTests
                  );
          }
 
-         [Test]
-         public void ReturnTypesDontMatchTest()
-         {
-             Assert.Throws<ArgumentException>(() =>
-             {
-                 new MethodTest(new TimeSpan(), typeof(String).GetMethod("IndexOf", new Type[] { typeof(char) }), "TEST_STRING",
-                     new List<ObjectInstance>() { new ObjectInstance('C') }, m_StringInstance);
-             }
-                 );
-         }
 
          private class TestType
          {
@@ -74,32 +64,6 @@ namespace Tests.UnitTests.TestHarnessTests
              public void TestMethod()
              {
              }
-         }
-
-         [Test]
-         public void VoidReturnTypeDoesntMatchCharTest()
-         {
-             var t = new TestType();
-             t.TestMethod();
-
-             Assert.Throws<ArgumentException>(() =>
-             {
-                 new MethodTest(new TimeSpan(), typeof(TestType).GetMethod("TestMethod"), "TEST_STRING", 
-                     null,
-                    new ObjectInstance(t, new ObjectCreationData(typeof(TestType).GetConstructor(Type.EmptyTypes))));
-             }
-                 );
-         }
-
-         [Test]
-         public void IntReturnTypeDoesntMatchNullTest()
-         {
-             Assert.Throws<ArgumentNullException>(() =>
-             {
-                 new MethodTest(new TimeSpan(), typeof(String).GetMethod("IndexOf", new Type[] { typeof(char) }), null,
-                     new List<ObjectInstance>() { new ObjectInstance('C') }, m_StringInstance);
-             }
-                 );
          }
 
          [Test]
@@ -146,7 +110,7 @@ namespace Tests.UnitTests.TestHarnessTests
              var args = new List<ObjectInstance>();
              var method = typeof(String).GetMethod("Normalize", Type.EmptyTypes);
 
-             Assert.Throws<ArgumentNullException>(() =>
+             Assert.Throws<ArgumentException>(() =>
              {
                  new MethodTest(new TimeSpan(), method, "TEST_STRING", args);
              });

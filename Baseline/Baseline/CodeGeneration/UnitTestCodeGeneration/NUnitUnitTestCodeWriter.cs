@@ -33,11 +33,21 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             }
             else if(constructorTest != null)
             {
-                testCode.Append(GetPropertiesTestCode(constructorTest.Result));
+                testCode.Append(GetConstructorTestCode(constructorTest));
             }
 
             
             testCode.AppendLine("}");
+            return testCode.ToString();
+        }
+
+        private String GetConstructorTestCode(ConstructorTest constructorTest)
+        {
+            StringBuilder testCode = new StringBuilder();
+            testCode.Append(TestSuiteGenerator.INDENT);
+            testCode.AppendLine(CodeWritingUtils.GetVariableInstantiationStatement(constructorTest.Method as ConstructorInfo, constructorTest.Arguments, INSTANCE_NAME));
+            testCode.Append(TestSuiteGenerator.INDENT);
+            testCode.AppendLine(GetPropertiesTestCode(constructorTest.Result));
             return testCode.ToString();
         }
 
@@ -93,18 +103,22 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private static string GetPropertiesTestCode(Object result)
+        private static string GetPropertiesTestCode(Object result, String instanceName = "instance")
         {
             StringBuilder testCode = new StringBuilder();
             var properties = result.GetType().GetProperties();
 
-            foreach (var propertyInfo in properties)
+
+            for (int i = 0; i < properties.Length; ++i )
             {
-                if(propertyInfo.CanRead)
+                var propertyInfo = properties[i];
+                if (propertyInfo.CanRead)
                 {
                     Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
 
-                    testCode.AppendFormat("Assert.That({0}.{1}, Is.Equal.To({2})", RESULT_NAME, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
+                    testCode.AppendFormat("Assert.That({0}.{1}, Is.Equal.To({2});", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
+                    if(i != properties.Length -1)
+                    testCode.AppendLine();
                 }
             }
 
