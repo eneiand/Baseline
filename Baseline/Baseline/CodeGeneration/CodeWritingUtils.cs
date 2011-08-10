@@ -85,16 +85,23 @@ namespace Baseline.CodeGeneration
 
         public static String GetMethodInvocationExpression(String entityToCallMethodOn, MethodBase method, IEnumerable<ObjectInstance> arguments = null)
         {
+            List<ObjectInstance> argumentList = arguments == null ? new List<ObjectInstance>() : new List<ObjectInstance>(arguments);
+
             StringBuilder code = new StringBuilder();
             code.AppendFormat("{0}.{1}(", entityToCallMethodOn, method.Name);
-
+            for (int i = 0; i < argumentList.Count; ++i)
+            {
+                code.AppendFormat("{0}{1}", GetObjectCreationExpression(argumentList[i]),
+                                  i != argumentList.Count - 1 ? ", " : String.Empty);
+            }
             code.Append(")");
             return code.ToString();
         }
 
         public static String GetConstructorInvocationExpression(ConstructorInfo constructor, IEnumerable<ObjectInstance> arguments = null )
         {
-            List<ObjectInstance> argumentList = new List<ObjectInstance>(arguments);
+            List<ObjectInstance> argumentList = arguments == null ? new List<ObjectInstance>() : new List<ObjectInstance>(arguments);
+
             StringBuilder code = new StringBuilder();
             code.AppendFormat("new {0}(", constructor.ReflectedType.Name);
 

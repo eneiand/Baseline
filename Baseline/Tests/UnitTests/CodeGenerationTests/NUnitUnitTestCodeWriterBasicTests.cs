@@ -77,7 +77,7 @@ public void DefaultConstructorTest()
 {
     var instance = new BasicTestType();
     Assert.That(instance, Is.Not.Null);
-    Assert.That(instance.Property1, Is.EqualTo(""TEST_STRING"");
+    Assert.That(instance.Property1, Is.EqualTo(""TEST_STRING""));
 }
 "));
         }
@@ -93,7 +93,7 @@ public void Method1Test()
     var instance = new BasicTestType();
     var result = instance.Method1();
     Assert.That(result, Is.EqualTo(5));
-    Assert.That(instance.Property1, Is.EqualTo(""TEST_STRING"");
+    Assert.That(instance.Property1, Is.EqualTo(""TEST_STRING""));
 }
 "));
         }

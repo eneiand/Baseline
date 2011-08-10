@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Text;
+using System.Collections.Generic;
 using Baseline.TestHarness.UnitTests;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 
@@ -92,7 +93,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             bool methodHasAReturnValue = methodTest.Result != null;
 
             testCode.Append(TestSuiteGenerator.INDENT);
-            testCode.Append(GetInvokeMethodCode(methodTest.Method, methodTest.Instance, methodHasAReturnValue).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT));
+            testCode.Append(GetInvokeMethodCode(methodTest.Method, methodTest.Instance, methodTest.Arguments, methodHasAReturnValue).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT));
             testCode.AppendLine();
 
             if (methodHasAReturnValue)
@@ -101,14 +102,19 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 testCode.AppendFormat("Assert.That({0}, Is.EqualTo({1}));", RESULT_NAME,
                                       CodeWritingUtils.GetObjectCreationExpression(methodTest.Result));
                 testCode.AppendLine();
+            }
+
+            String propTestCode = GetPropertiesTestCode(methodTest.Instance.Instance);
+            if (propTestCode != String.Empty)
+            {
                 testCode.Append(TestSuiteGenerator.INDENT);
-                testCode.AppendLine(GetPropertiesTestCode(methodTest.Instance.Instance));
+                testCode.AppendLine(propTestCode);
             }
 
             return testCode.ToString();
         }
 
-        private static string GetInvokeMethodCode(MethodBase method,  ObjectInstance instance = null, bool methodHasReturnValue = false)
+        private static string GetInvokeMethodCode(MethodBase method,  ObjectInstance instance = null, IEnumerable<ObjectInstance> arguments = null, bool methodHasReturnValue = false)
         {
             StringBuilder testCode = new StringBuilder();
             if (!method.IsStatic)
@@ -116,7 +122,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 
                 testCode.AppendLine(CodeWritingUtils.GetVariableInstantiationStatement(instance, INSTANCE_NAME));
                 testCode.AppendFormat("{0}{1}", methodHasReturnValue ? "var " + RESULT_NAME + " = " : String.Empty,
-                                      CodeWritingUtils.GetMethodInvocationStatement(INSTANCE_NAME, method));
+                                      CodeWritingUtils.GetMethodInvocationStatement(INSTANCE_NAME, method, arguments));
             }
 
             return testCode.ToString();
@@ -135,7 +141,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 {
                     Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
 
-                    testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2});", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
+                    testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2}));", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
                     if(i != properties.Length -1)
                     testCode.AppendLine();
                 }

@@ -19,10 +19,18 @@ namespace Tests.UnitTests.CodeGenerationTests
         public ConstructorTestsType(OtherTestClass z)
         {
         }
+
+        
     }
 
     public class OtherTestClass
     {
+
+        public OtherTestClass()
+        {}
+
+        public OtherTestClass(int x, int y)
+        { }
     }
 
     [TestFixture]
@@ -31,6 +39,7 @@ namespace Tests.UnitTests.CodeGenerationTests
 
         private ConstructorTest m_IntsConstructorTest;
         private ConstructorTest m_ComplexConstructorTest;
+        private ConstructorTest m_MoreComplexConstructorTest;
 
         private Type m_TestType;
         private ObjectInstance m_TestTypeInstance, m_TestTypeComplexInstance;
@@ -61,6 +70,8 @@ namespace Tests.UnitTests.CodeGenerationTests
 
             m_ComplexConstructorTest = new ConstructorTest(TimeSpan.FromMilliseconds(2), m_TestTypeComplexConstructor, m_TestTypeComplexInstance.Instance, complexArgs);
 
+            List<ObjectInstance> moreComplexArgs = new List<ObjectInstance> { new ObjectInstance(new OtherTestClass(), new ObjectCreationData(typeof(OtherTestClass).GetConstructor(new []{typeof(Int32), typeof(Int32)}), intArgs)) };
+            m_MoreComplexConstructorTest = new ConstructorTest(TimeSpan.FromMilliseconds(1), m_TestTypeComplexConstructor, m_TestTypeComplexInstance.Instance, moreComplexArgs);
         }
 
         [Test]
@@ -91,5 +102,18 @@ public void OtherTestClassConstructorTest()
 "                ));
         }
 
+        [Test]
+        public void MoreComplexConstructorTest()
+        {
+            var code = m_TestCodeWriter.GetCode(m_MoreComplexConstructorTest);
+            Assert.That(code, Is.EqualTo(
+@"[Test]
+public void OtherTestClassConstructorTest()
+{
+    var instance = new ConstructorTestsType(new OtherTestClass(1, 2));
+    Assert.That(instance, Is.Not.Null);
+}
+"               ));
+        }
     }
 }
