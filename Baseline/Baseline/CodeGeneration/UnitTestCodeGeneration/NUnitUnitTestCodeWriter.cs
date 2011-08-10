@@ -41,13 +41,31 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private String GetConstructorTestCode(ConstructorTest constructorTest)
+        private static String GetConstructorTestCode(ConstructorTest constructorTest)
         {
             StringBuilder testCode = new StringBuilder();
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.AppendLine(CodeWritingUtils.GetVariableInstantiationStatement(constructorTest.Method as ConstructorInfo, constructorTest.Arguments, INSTANCE_NAME));
             testCode.Append(TestSuiteGenerator.INDENT);
-            testCode.AppendLine(GetPropertiesTestCode(constructorTest.Result));
+            
+            if(constructorTest.Result == null)
+            {
+                testCode.AppendFormat("Assert.That({0}, Is.Null);", INSTANCE_NAME);
+                testCode.AppendLine();
+            }
+            else
+            {
+                testCode.AppendFormat("Assert.That({0}, Is.Not.Null);", INSTANCE_NAME);
+                testCode.AppendLine();
+
+                String propTestCode = GetPropertiesTestCode(constructorTest.Result);
+                if (propTestCode != String.Empty)
+                {
+                    testCode.Append(TestSuiteGenerator.INDENT);
+                    testCode.AppendLine(propTestCode);
+                }
+            }
+ 
             return testCode.ToString();
         }
 
@@ -60,42 +78,43 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             testCode.AppendLine();
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.AppendLine("{");
-            testCode.AppendLine(GetInvokeMethodCode(exceptionThrowingTest.Method, exceptionThrowingTest.Instance, indent: TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT));
+            testCode.Append(TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT);
+            testCode.AppendLine(GetInvokeMethodCode(exceptionThrowingTest.Method, exceptionThrowingTest.Instance).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT));
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.AppendLine("});");
             
             return testCode.ToString();
         }
 
-        private String GetMethodTestCode(MethodTest methodTest)
+        private static String GetMethodTestCode(MethodTest methodTest)
         {
             StringBuilder testCode = new StringBuilder();
             bool methodHasAReturnValue = methodTest.Result != null;
 
-
-            testCode.Append(GetInvokeMethodCode(methodTest.Method, methodTest.Instance, methodHasAReturnValue));
+            testCode.Append(TestSuiteGenerator.INDENT);
+            testCode.Append(GetInvokeMethodCode(methodTest.Method, methodTest.Instance, methodHasAReturnValue).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT));
             testCode.AppendLine();
 
             if (methodHasAReturnValue)
             {
                 testCode.Append(TestSuiteGenerator.INDENT);
-                testCode.AppendFormat("Assert.That({0}, Is.Equal.To({1}));", RESULT_NAME,
+                testCode.AppendFormat("Assert.That({0}, Is.EqualTo({1}));", RESULT_NAME,
                                       CodeWritingUtils.GetObjectCreationExpression(methodTest.Result));
                 testCode.AppendLine();
+                testCode.Append(TestSuiteGenerator.INDENT);
+                testCode.AppendLine(GetPropertiesTestCode(methodTest.Instance.Instance));
             }
 
             return testCode.ToString();
         }
 
-        private static string GetInvokeMethodCode(MethodBase method,  ObjectInstance instance = null, bool methodHasReturnValue = false, String indent = TestSuiteGenerator.INDENT)
+        private static string GetInvokeMethodCode(MethodBase method,  ObjectInstance instance = null, bool methodHasReturnValue = false)
         {
             StringBuilder testCode = new StringBuilder();
             if (!method.IsStatic)
             {
-                testCode.Append(indent);
+                
                 testCode.AppendLine(CodeWritingUtils.GetVariableInstantiationStatement(instance, INSTANCE_NAME));
-
-                testCode.Append(indent);
                 testCode.AppendFormat("{0}{1}", methodHasReturnValue ? "var " + RESULT_NAME + " = " : String.Empty,
                                       CodeWritingUtils.GetMethodInvocationStatement(INSTANCE_NAME, method));
             }
@@ -116,7 +135,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 {
                     Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
 
-                    testCode.AppendFormat("Assert.That({0}.{1}, Is.Equal.To({2});", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
+                    testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2});", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
                     if(i != properties.Length -1)
                     testCode.AppendLine();
                 }

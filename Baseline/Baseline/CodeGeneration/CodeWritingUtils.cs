@@ -39,7 +39,16 @@ namespace Baseline.CodeGeneration
 
             if (instance.InstanceNeedsConstructor)
             {
-                code.AppendFormat("new {0}()", instance.Instance.GetType().Name);
+                code.AppendFormat("new {0}(", instance.Instance.GetType().Name);
+
+                var args = instance.CreationData.Arguments;
+                for (int i = 0; i < args.Count; ++i )
+                {
+                    code.AppendFormat("{0}{1}", GetObjectCreationExpression(args[i]), i != args.Count-1? ", " : String.Empty);
+                }
+
+
+                    code.AppendFormat(")");
             }
             else
             {
@@ -85,8 +94,15 @@ namespace Baseline.CodeGeneration
 
         public static String GetConstructorInvocationExpression(ConstructorInfo constructor, IEnumerable<ObjectInstance> arguments = null )
         {
+            List<ObjectInstance> argumentList = new List<ObjectInstance>(arguments);
             StringBuilder code = new StringBuilder();
-            code.AppendFormat("new {0}(", constructor.ReflectedType.FullName);
+            code.AppendFormat("new {0}(", constructor.ReflectedType.Name);
+
+            for (int i = 0; i < argumentList.Count; ++i)
+            {
+                code.AppendFormat("{0}{1}", GetObjectCreationExpression(argumentList[i]),
+                                  i != argumentList.Count - 1 ? ", " : String.Empty);
+            }
 
             code.Append(")");
             return code.ToString();

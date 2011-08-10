@@ -70,7 +70,7 @@ namespace Baseline.TestHarness.UnitTests
 
         public virtual String Name
         {
-            get { return String.Format("{0}{1}Test", this.Method.DeclaringType.Name, this.Method.Name); }
+            get { return String.Format("{0}Test",  this.Method.Name); }
         }
     }
 }

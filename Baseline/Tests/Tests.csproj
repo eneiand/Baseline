@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\CodeGenerationTests\NUnitTestSuiteGenerationTests.cs" />
+    <Compile Include="UnitTests\CodeGenerationTests\NUnitUnitTestCodeWriterBasicTests.cs" />
+    <Compile Include="UnitTests\CodeGenerationTests\NUnitUnitTestCodeWriterConstructorTests.cs" />
     <Compile Include="UnitTests\TestHarnessTests\ConstructorTestTests.cs" />
     <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorNonPrimitiveTypeTests.cs" />
     <Compile Include="UnitTests\DefaultTestValueCalculatorTests\DefaultTestValueCalculatorPrimitiveTypeTests.cs" />

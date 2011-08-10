@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 
@@ -16,6 +17,20 @@ namespace Baseline.TestHarness.UnitTests
         
         }
 
+        public override string Name
+        {
+            get
+            {
+
+
+                List<String> paramTypes = new List<string>(from p in Method.GetParameters() select p.ParameterType.Name);
+                String pTypes = String.Empty;
+                paramTypes.ForEach(p => pTypes+=p);
+
+                return String.Format("{0}ConstructorTest",
+                                     this.Method.GetParameters().Length == 0 ? "Default" : pTypes);
+            }
+        }
 
     }
 }

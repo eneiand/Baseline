@@ -8,5 +8,4 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
         public abstract String GetCode(UnitTest test);
 
     }
-
 }
