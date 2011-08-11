@@ -37,6 +37,7 @@ namespace Baseline.CodeGeneration
         {
             StringBuilder code = new StringBuilder();
 
+                
             if (instance.InstanceNeedsConstructor)
             {
                 code.AppendFormat("new {0}(", instance.Instance.GetType().Name);

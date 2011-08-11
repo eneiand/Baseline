@@ -155,6 +155,9 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
 
         private static string GetPublicFieldsAndPropertiesTestCode(Object result, String instanceName = "instance")
         {
+            if (instanceName.Split(new char[] { '.' }).Length > 4)
+                return String.Empty;
+
             StringBuilder testCode = new StringBuilder();
 
             var fields = result.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
@@ -190,6 +193,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             for (int i = 0; i < properties.Length; ++i )
             {
                 var propertyInfo = properties[i];
+
                 if (propertyInfo.CanRead)
                 {
                     try
@@ -221,6 +225,16 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             }
 
             return testCode.ToString();
+        }
+
+        private static bool ExcludeType(Type propertyType)
+        {
+            if (propertyType.Namespace.Contains("System.Security") || propertyType.Namespace.Contains("System.Reflection"))
+                return true;
+            else
+            {
+                return false;
+            }
         }
     }
 }
