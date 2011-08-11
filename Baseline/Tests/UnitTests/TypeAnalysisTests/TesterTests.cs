@@ -69,6 +69,7 @@ namespace Tests.UnitTests.TypeAnalysisTests
                 Assert.That(testSuite.Tests.FindAll(t => methodInfo.Name == t.Method.Name).Count >= 1);
             }
 
+            Console.WriteLine(new TestSuiteGenerator(testSuite, new NUnitUnitTestCodeWriter(), "TestFixture").TransformText());
 
         }
 
@@ -86,9 +87,8 @@ namespace Tests.UnitTests.TypeAnalysisTests
                 Assert.That(testSuites.Find(t => t.Type == type) != null);
             }
 
+            
            
-
-
         }
     }
 }

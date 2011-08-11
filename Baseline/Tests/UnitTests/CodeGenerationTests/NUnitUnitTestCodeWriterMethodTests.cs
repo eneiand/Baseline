@@ -36,6 +36,10 @@ namespace Tests.UnitTests.CodeGenerationTests
             return new OtherType();
         }
 
+        public OtherType MethodReturningNull()
+        {
+            return null;
+        }
 
     }
 
@@ -52,12 +56,16 @@ namespace Tests.UnitTests.CodeGenerationTests
         private MethodTest m_MethodTakingAnIntTest;
         private MethodTest m_MethodTakingAComplexTypeTest;
         private MethodTest m_MethodReturningAComplexTypeTest;
+        private MethodTest m_MethodReturningNullTest;
+
 
         private MethodInfo m_SimpleMethod;
         private MethodInfo m_IntReturningMethod;
         private MethodInfo m_MethodTakingAnInt;
         private MethodInfo m_MethodTakingAComplexType;
         private MethodInfo m_MethodReturningAComplexType;
+        private MethodInfo m_MethodReturningNull;
+
 
         private MethodTestsType m_TargetInstance = new MethodTestsType();
         private ObjectInstance m_TargetInstanceMeta;
@@ -67,6 +75,8 @@ namespace Tests.UnitTests.CodeGenerationTests
         private Type m_TypeUnderTest;
 
         private NUnitUnitTestCodeWriter m_TestCodeWriter;
+
+        String m_Code = String.Empty;
 
         [SetUp]
         public void Setup()
@@ -78,6 +88,7 @@ namespace Tests.UnitTests.CodeGenerationTests
             m_MethodTakingAnInt = m_TypeUnderTest.GetMethod("MethodTakingAnInt");
             m_MethodTakingAComplexType = m_TypeUnderTest.GetMethod("MethodTakingAComplexType");
             m_MethodReturningAComplexType = m_TypeUnderTest.GetMethod("MethodReturningAComplexType");
+            m_MethodReturningNull = m_TypeUnderTest.GetMethod("MethodReturningNull");
 
             m_TargetInstanceMeta = new ObjectInstance(m_TargetInstance, new ObjectCreationData(m_TypeUnderTest.GetConstructor(Type.EmptyTypes)));
             m_OtherTypeMeta = new ObjectInstance(m_OtherType, new ObjectCreationData(typeof(OtherType).GetConstructor(Type.EmptyTypes)));
@@ -90,13 +101,21 @@ namespace Tests.UnitTests.CodeGenerationTests
 
             m_MethodTakingAComplexTypeTest = new MethodTest(TimeSpan.FromMilliseconds(1), m_MethodTakingAComplexType, null, new[] { m_OtherTypeMeta }, m_TargetInstanceMeta);
             m_MethodReturningAComplexTypeTest = new MethodTest(TimeSpan.FromMilliseconds(1), m_MethodReturningAComplexType, m_OtherType, instance: m_TargetInstanceMeta);
+        
+            m_MethodReturningNullTest = new MethodTest(TimeSpan.FromMilliseconds(1), m_MethodReturningNull, null, instance:m_TargetInstanceMeta);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            Console.WriteLine(m_Code);
         }
 
         [Test]
         public void SimpleMethodTest()
         {
-            var code = m_TestCodeWriter.GetCode(m_SimpleMethodTest);
-            Assert.That(code, Is.EqualTo(
+            m_Code = m_TestCodeWriter.GetCode(m_SimpleMethodTest);
+            Assert.That(m_Code, Is.EqualTo(
 @"[Test]
 public void SimpleMethodTest()
 {
@@ -110,24 +129,24 @@ public void SimpleMethodTest()
         [Test]
         public void IntReturningMethodTest()
         {
-            var code = m_TestCodeWriter.GetCode(m_IntReturningMethodTest);
-            Assert.That(code, Is.EqualTo(
+            m_Code = m_TestCodeWriter.GetCode(m_IntReturningMethodTest);
+            Assert.That(m_Code, Is.EqualTo(
 @"[Test]
 public void IntReturningMethodTest()
 {
     var instance = new MethodTestsType();
     var result = instance.IntReturningMethod();
-    Assert.That(result, Is.EqualTo(3));
     Assert.That(instance.TestProperty, Is.EqualTo(3));
+    Assert.That(result, Is.EqualTo(3));
 }
-"                ));
+"));
         }
 
         [Test]
         public void MethodTakingAnIntTest()
         {
-            var code = m_TestCodeWriter.GetCode(m_MethodTakingAnIntTest);
-            Assert.That(code, Is.EqualTo(
+            m_Code = m_TestCodeWriter.GetCode(m_MethodTakingAnIntTest);
+            Assert.That(m_Code, Is.EqualTo(
 @"[Test]
 public void MethodTakingAnIntTest()
 {
@@ -141,8 +160,8 @@ public void MethodTakingAnIntTest()
         [Test]
         public void MethodTakingAComplexTypeTest()
         {
-            var code = m_TestCodeWriter.GetCode(m_MethodTakingAComplexTypeTest);
-            Assert.That(code, Is.EqualTo(
+            m_Code = m_TestCodeWriter.GetCode(m_MethodTakingAComplexTypeTest);
+            Assert.That(m_Code, Is.EqualTo(
 @"[Test]
 public void MethodTakingAComplexTypeTest()
 {
@@ -156,8 +175,8 @@ public void MethodTakingAComplexTypeTest()
         [Test]
         public void MethodReturningAComplexTypeTest()
         {
-            var code = m_TestCodeWriter.GetCode(m_MethodReturningAComplexTypeTest);
-            Assert.That(code, Is.EqualTo(
+            m_Code = m_TestCodeWriter.GetCode(m_MethodReturningAComplexTypeTest);
+            Assert.That(m_Code, Is.EqualTo(
 @"[Test]
 public void MethodReturningAComplexTypeTest()
 {
@@ -168,6 +187,22 @@ public void MethodReturningAComplexTypeTest()
     Assert.That(result.TestProperty, Is.EqualTo(3));
 }
 "                ));
+        }
+
+        [Test]
+        public void MethodReturningNullTest()
+        {
+            m_Code = m_TestCodeWriter.GetCode(m_MethodReturningNullTest);
+            Assert.That(m_Code, Is.EqualTo(
+@"[Test]
+public void MethodReturningNullTest()
+{
+    var instance = new MethodTestsType();
+    var result = instance.MethodReturningNull();
+    Assert.That(instance.TestProperty, Is.EqualTo(3));
+    Assert.That(result, Is.Null);
+}
+"));
         }
     }
 }

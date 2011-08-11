@@ -92,8 +92,8 @@ public void Method1Test()
 {
     var instance = new BasicTestType();
     var result = instance.Method1();
-    Assert.That(result, Is.EqualTo(5));
     Assert.That(instance.Property1, Is.EqualTo(""TEST_STRING""));
+    Assert.That(result, Is.EqualTo(5));
 }
 "));
         }

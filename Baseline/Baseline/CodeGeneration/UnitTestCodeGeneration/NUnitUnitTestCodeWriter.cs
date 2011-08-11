@@ -59,11 +59,11 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 testCode.AppendFormat("Assert.That({0}, Is.Not.Null);", INSTANCE_NAME);
                 testCode.AppendLine();
 
-                String propTestCode = GetPropertiesTestCode(constructorTest.Result);
+                String propTestCode = GetPublicFieldsAndPropertiesTestCode(constructorTest.Result);
                 if (propTestCode != String.Empty)
                 {
                     testCode.Append(TestSuiteGenerator.INDENT);
-                    testCode.AppendLine(propTestCode);
+                    testCode.AppendLine(propTestCode.Replace("\r\n", "\r\n" + TestSuiteGenerator.INDENT));
                 }
             }
  
@@ -90,26 +90,51 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
         private static String GetMethodTestCode(MethodTest methodTest)
         {
             StringBuilder testCode = new StringBuilder();
-            bool methodHasAReturnValue = methodTest.Result != null;
+
+            var constructorInfo = methodTest.Method as ConstructorInfo;
+            var methodInfo = methodTest.Method as MethodInfo;
+
+
+            bool methodHasAReturnValue = (constructorInfo != null || !(methodInfo != null && methodInfo.ReturnType == typeof(void)));
 
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.Append(GetInvokeMethodCode(methodTest.Method, methodTest.Instance, methodTest.Arguments, methodHasAReturnValue).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT));
             testCode.AppendLine();
 
-            if (methodHasAReturnValue)
+            if (methodTest.Instance != null)
             {
-                testCode.Append(TestSuiteGenerator.INDENT);
-                testCode.AppendFormat("Assert.That({0}, Is.EqualTo({1}));", RESULT_NAME,
-                                      CodeWritingUtils.GetObjectCreationExpression(methodTest.Result));
-                testCode.AppendLine();
+                String propTestCode = GetPublicFieldsAndPropertiesTestCode(methodTest.Instance.Instance);
+                if (propTestCode != String.Empty)
+                {
+                    testCode.Append(TestSuiteGenerator.INDENT);
+                    testCode.AppendLine(propTestCode);
+                }
             }
 
-            String propTestCode = GetPropertiesTestCode(methodTest.Instance.Instance);
-            if (propTestCode != String.Empty)
+            if (methodHasAReturnValue)
             {
-                testCode.Append(TestSuiteGenerator.INDENT);
-                testCode.AppendLine(propTestCode);
+                if(methodTest.Result != null)
+                {
+                    testCode.Append(TestSuiteGenerator.INDENT);
+                    testCode.AppendFormat("Assert.That({0}, {1});", RESULT_NAME, ObjectInstance.NeedsConstructor(methodTest.Result.GetType()) ?  "Is.Not.Null" : String.Format("Is.EqualTo({0})",CodeWritingUtils.GetObjectCreationExpression(methodTest.Result) ));
+                    testCode.AppendLine();
+
+                    String propTestCode = GetPublicFieldsAndPropertiesTestCode(methodTest.Result, RESULT_NAME);
+                    if (propTestCode != String.Empty)
+                    {
+                        testCode.Append(TestSuiteGenerator.INDENT);
+                        testCode.AppendLine(propTestCode);
+                    }
+                }
+                else
+                {
+                    testCode.Append(TestSuiteGenerator.INDENT);
+                    testCode.AppendFormat("Assert.That({0}, Is.Null);", RESULT_NAME);
+                    testCode.AppendLine();
+                }
             }
+
+
 
             return testCode.ToString();
         }
@@ -128,9 +153,37 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private static string GetPropertiesTestCode(Object result, String instanceName = "instance")
+        private static string GetPublicFieldsAndPropertiesTestCode(Object result, String instanceName = "instance")
         {
             StringBuilder testCode = new StringBuilder();
+
+            var fields = result.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+
+            for(int i = 0; i < fields.Length; ++i)
+            {
+                var fieldInfo = fields[i];
+
+                var fieldVal = fieldInfo.GetValue(result);
+
+                if (fieldVal == null)
+                {
+                    testCode.AppendFormat("Assert.That({0}, Is.Null);", instanceName + "." + fieldInfo.Name);
+                }
+                else if (ObjectInstance.NeedsConstructor(fieldVal.GetType()))
+                {
+                    testCode.AppendFormat("Assert.That({0}, Is.Not.Null);", instanceName + "." + fieldInfo.Name);
+                    testCode.AppendLine();
+                    testCode.Append(GetPublicFieldsAndPropertiesTestCode(fieldVal,
+                                                              instanceName + "." + fieldInfo.Name));
+                }
+                else
+                    testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2}));", instanceName, fieldInfo.Name, CodeWritingUtils.GetObjectCreationExpression(fieldVal));
+
+                    testCode.AppendLine();
+            }
+
+
+
             var properties = result.GetType().GetProperties();
 
 
@@ -139,10 +192,30 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
                 var propertyInfo = properties[i];
                 if (propertyInfo.CanRead)
                 {
-                    Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
+                    try
+                    {
+                        Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
 
-                    testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2}));", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
-                    if(i != properties.Length -1)
+                        if(propertyVal == null)
+                        {
+                            testCode.AppendFormat("Assert.That({0}, Is.Null);", instanceName + "." + propertyInfo.Name);
+                        }
+                        else if(ObjectInstance.NeedsConstructor(propertyVal.GetType()))
+                        {
+                            testCode.AppendFormat("Assert.That({0}, Is.Not.Null);", instanceName + "." + propertyInfo.Name);
+                            testCode.AppendLine();
+                            testCode.Append(GetPublicFieldsAndPropertiesTestCode(propertyVal,
+                                                                      instanceName + "." + propertyInfo.Name));
+                        }
+                        else
+                            testCode.AppendFormat("Assert.That({0}.{1}, Is.EqualTo({2}));", instanceName, propertyInfo.Name, CodeWritingUtils.GetObjectCreationExpression(propertyVal));
+                    }
+                    catch(Exception e)
+                    {
+                        testCode.AppendFormat("Assert.Throws<{0}>(()=>{1}.{2}));", e.GetType().Name, instanceName, propertyInfo.Name);                        
+                    }
+                    
+                 if(i != properties.Length -1)
                     testCode.AppendLine();
                 }
             }
