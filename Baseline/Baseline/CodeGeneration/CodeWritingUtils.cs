@@ -9,7 +9,7 @@ namespace Baseline.CodeGeneration
 {
     static class CodeWritingUtils
     {
-        public static String GetVariableInstantiationStatement(ObjectInstance instance, String variableName = "instance")
+        public static String GetVariableInstantiationStatement(IObjectInstance instance, String variableName = "instance")
         {
             StringBuilder code = new StringBuilder();
             
@@ -21,7 +21,7 @@ namespace Baseline.CodeGeneration
             return code.ToString();
         }
 
-        public static String GetVariableInstantiationStatement(ConstructorInfo constructor, IEnumerable<ObjectInstance> arguments, String variableName = "instance")
+        public static String GetVariableInstantiationStatement(ConstructorInfo constructor, IEnumerable<IObjectInstance> arguments, String variableName = "instance")
         {
             StringBuilder code = new StringBuilder();
 
@@ -33,8 +33,12 @@ namespace Baseline.CodeGeneration
             return code.ToString();
         }
 
-        public static String GetObjectCreationExpression(ObjectInstance instance)
+        public static String GetObjectCreationExpression(IObjectInstance instance)
         {
+
+            if (instance == null)
+                return "null";
+
             StringBuilder code = new StringBuilder();
 
                 
@@ -57,6 +61,10 @@ namespace Baseline.CodeGeneration
                     return "\"" + instance.Instance + "\"";
                 else if (instance.Instance is char)
                     return "'" + instance.Instance + "'";
+                else if (instance.Instance is Enum)
+                    return instance.Instance.GetType().Name + "." + instance.Instance.ToString();
+                else if (instance is NullObjectInstance)
+                    return "null";
                 else
                     return instance.Instance.ToString();
             }
@@ -84,9 +92,9 @@ namespace Baseline.CodeGeneration
           
         }
 
-        public static String GetMethodInvocationExpression(String entityToCallMethodOn, MethodBase method, IEnumerable<ObjectInstance> arguments = null)
+        public static String GetMethodInvocationExpression(String entityToCallMethodOn, MethodBase method, IEnumerable<IObjectInstance> arguments = null)
         {
-            List<ObjectInstance> argumentList = arguments == null ? new List<ObjectInstance>() : new List<ObjectInstance>(arguments);
+            List<IObjectInstance> argumentList = arguments == null ? new List<IObjectInstance>() : new List<IObjectInstance>(arguments);
 
             StringBuilder code = new StringBuilder();
             code.AppendFormat("{0}.{1}(", entityToCallMethodOn, method.Name);
@@ -99,9 +107,9 @@ namespace Baseline.CodeGeneration
             return code.ToString();
         }
 
-        public static String GetConstructorInvocationExpression(ConstructorInfo constructor, IEnumerable<ObjectInstance> arguments = null )
+        public static String GetConstructorInvocationExpression(ConstructorInfo constructor, IEnumerable<IObjectInstance> arguments = null)
         {
-            List<ObjectInstance> argumentList = arguments == null ? new List<ObjectInstance>() : new List<ObjectInstance>(arguments);
+            List<IObjectInstance> argumentList = arguments == null ? new List<IObjectInstance>() : new List<IObjectInstance>(arguments);
 
             StringBuilder code = new StringBuilder();
             code.AppendFormat("new {0}(", constructor.ReflectedType.Name);
@@ -116,7 +124,7 @@ namespace Baseline.CodeGeneration
             return code.ToString();
         }
 
-        public static String GetMethodInvocationStatement(String entityToCallMethodOn, MethodBase method, IEnumerable<ObjectInstance> arguments = null)
+        public static String GetMethodInvocationStatement(String entityToCallMethodOn, MethodBase method, IEnumerable<IObjectInstance> arguments = null)
         {
             return GetMethodInvocationExpression(entityToCallMethodOn, method, arguments) + ";";
         }

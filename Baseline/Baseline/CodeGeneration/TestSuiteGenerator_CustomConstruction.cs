@@ -21,5 +21,9 @@ namespace Baseline.CodeGeneration
             UnitTestCodeWriter = unitTestCodeWriter;
             ClassAttribute = classAttribute;
         }
+        public TestSuiteGenerator(TestSuite tSuite, UnitTestCodeWriter unitTestCodeWriter) : this(tSuite, unitTestCodeWriter, "[TestFixture]")
+        {
+
+        }
     }
 }

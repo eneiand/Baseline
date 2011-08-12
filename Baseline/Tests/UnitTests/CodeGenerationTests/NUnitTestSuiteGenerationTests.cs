@@ -51,7 +51,7 @@ namespace Tests.UnitTests.CodeGenerationTests
                                             result:new DummyType()));
 
             m_TestSuite = new TestSuite(m_DummyType, m_Tests);
-            m_TestSuiteGenerator = new TestSuiteGenerator(m_TestSuite, new NUnitUnitTestCodeWriter(), "[TestFixture]");
+            m_TestSuiteGenerator = new TestSuiteGenerator(m_TestSuite, new NUnitUnitTestCodeWriter());
     
         }
 

@@ -9,9 +9,15 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
 {
     public class NUnitUnitTestCodeWriter : UnitTestCodeWriter
     {
+        private int MaxDepth { get; set; }
         private static readonly String TEST_ATTRIBUTE = "[Test]";
         private static readonly String INSTANCE_NAME = "instance";
         private static readonly String RESULT_NAME = "result";
+
+        public NUnitUnitTestCodeWriter(Int32 maxDepth = 4)
+        {
+            MaxDepth = maxDepth;
+        }
 
         public override string GetCode(UnitTest test)
         {
@@ -42,7 +48,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private static String GetConstructorTestCode(ConstructorTest constructorTest)
+        private  String GetConstructorTestCode(ConstructorTest constructorTest)
         {
             StringBuilder testCode = new StringBuilder();
             testCode.Append(TestSuiteGenerator.INDENT);
@@ -70,7 +76,7 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private static String GetExceptionThrowingMethodTestCode(ExceptionThrowingTest exceptionThrowingTest)
+        private  String GetExceptionThrowingMethodTestCode(ExceptionThrowingTest exceptionThrowingTest)
         {
             StringBuilder testCode = new StringBuilder();
             
@@ -80,14 +86,14 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.AppendLine("{");
             testCode.Append(TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT);
-            testCode.AppendLine(GetInvokeMethodCode(exceptionThrowingTest.Method, exceptionThrowingTest.Instance).Replace("\r\n", "\r\n"+ TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT));
+            testCode.AppendLine(GetInvokeMethodCode(exceptionThrowingTest.Method, exceptionThrowingTest.Instance, exceptionThrowingTest.Arguments).Replace(";\r\n", ";\r\n"+ TestSuiteGenerator.INDENT + TestSuiteGenerator.INDENT));
             testCode.Append(TestSuiteGenerator.INDENT);
             testCode.AppendLine("});");
             
             return testCode.ToString();
         }
 
-        private static String GetMethodTestCode(MethodTest methodTest)
+        private  String GetMethodTestCode(MethodTest methodTest)
         {
             StringBuilder testCode = new StringBuilder();
 
@@ -139,23 +145,32 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             return testCode.ToString();
         }
 
-        private static string GetInvokeMethodCode(MethodBase method,  ObjectInstance instance = null, IEnumerable<ObjectInstance> arguments = null, bool methodHasReturnValue = false)
+        private static string GetInvokeMethodCode(MethodBase method, IObjectInstance instance = null, IEnumerable<IObjectInstance> arguments = null, bool methodHasReturnValue = false)
         {
             StringBuilder testCode = new StringBuilder();
+
+            if(method.IsConstructor)
+            {
+                testCode.Append(CodeWritingUtils.GetVariableInstantiationStatement(method as ConstructorInfo,
+                                                                                       arguments));
+                return testCode.ToString();
+            }
             if (!method.IsStatic)
             {
                 
                 testCode.AppendLine(CodeWritingUtils.GetVariableInstantiationStatement(instance, INSTANCE_NAME));
-                testCode.AppendFormat("{0}{1}", methodHasReturnValue ? "var " + RESULT_NAME + " = " : String.Empty,
-                                      CodeWritingUtils.GetMethodInvocationStatement(INSTANCE_NAME, method, arguments));
             }
+
+            testCode.AppendFormat("{0}{1}", methodHasReturnValue ? "var " + RESULT_NAME + " = " : String.Empty,
+                CodeWritingUtils.GetMethodInvocationStatement( method.IsStatic? method.ReflectedType.Name : INSTANCE_NAME, method, arguments));
 
             return testCode.ToString();
         }
 
-        private static string GetPublicFieldsAndPropertiesTestCode(Object result, String instanceName = "instance")
+        private string GetPublicFieldsAndPropertiesTestCode(Object result, String instanceName = "instance")
         {
-            if (instanceName.Split(new char[] { '.' }).Length > 4)
+            //some properties of types can end of in an infinite loop so
+            if (instanceName.Split(new char[] { '.' }).Length > MaxDepth)
                 return String.Empty;
 
             StringBuilder testCode = new StringBuilder();
@@ -225,16 +240,6 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             }
 
             return testCode.ToString();
-        }
-
-        private static bool ExcludeType(Type propertyType)
-        {
-            if (propertyType.Namespace.Contains("System.Security") || propertyType.Namespace.Contains("System.Reflection"))
-                return true;
-            else
-            {
-                return false;
-            }
         }
     }
 }

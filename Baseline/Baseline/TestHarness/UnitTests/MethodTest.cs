@@ -7,7 +7,8 @@ namespace Baseline.TestHarness.UnitTests
 {
     public class MethodTest : UnitTest
     {
-        public MethodTest(TimeSpan runningTime, MethodInfo method, Object result = null, IEnumerable<ObjectInstance> arguments = null, ObjectInstance instance = null) : base(runningTime, method, instance, arguments, result)
+        public MethodTest(TimeSpan runningTime, MethodInfo method, Object result = null, IEnumerable<IObjectInstance> arguments = null, IObjectInstance instance = null)
+            : base(runningTime, method, instance, arguments, result)
         {
             if(instance != null && method.IsStatic) throw new ArgumentException("method is static so no instance should be specified");
             if(instance == null && !method.IsStatic) throw new ArgumentNullException("instance", "non-static method needs instance to be called on");

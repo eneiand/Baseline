@@ -2,7 +2,15 @@
 
 namespace Baseline.TypeAnalysis.ObjectInstantiation
 {
-    public class ObjectInstance
+    public interface IObjectInstance
+    {
+        bool InstanceNeedsConstructor { get; }
+        Object Instance { get; }
+        ObjectCreationData CreationData { get; }
+        string ToString();
+    }
+
+    public class ObjectInstance : IObjectInstance
     {
         public ObjectInstance(Object instance, ObjectCreationData objectCreationData = null)
         {
@@ -45,6 +53,24 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
         public override string ToString()
         {
             return Instance.ToString();
+        }
+    }
+
+    public class NullObjectInstance : IObjectInstance
+    {
+        public bool InstanceNeedsConstructor
+        {
+            get { return false; }
+        }
+
+        public object Instance
+        {
+            get { return null; }
+        }
+
+        public ObjectCreationData CreationData
+        {
+            get { return null; }
         }
     }
 }

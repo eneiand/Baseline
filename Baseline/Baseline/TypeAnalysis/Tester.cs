@@ -13,14 +13,17 @@ namespace Baseline.TypeAnalysis
     public class Tester
     {
         private readonly TestValueCalculator m_RangeCalculator;
+        private readonly List<string> m_MethodExclusions;
 
-        public Tester(TestValueCalculator rangeCalculator)
+        public Tester(TestValueCalculator rangeCalculator, List<String> methodExclusions)
         {
             if (rangeCalculator == null) throw new ArgumentNullException("rangeCalculator");
+            if (methodExclusions == null) throw new ArgumentNullException("methodExclusions");
             m_RangeCalculator = rangeCalculator;
+            m_MethodExclusions = methodExclusions;
         }
 
-        public Tester() : this(new DefaultTestValueCalculator())
+        public Tester() : this(new DefaultTestValueCalculator(), new List<string>(){"GetType"})
         {
         }
 
@@ -43,9 +46,11 @@ namespace Baseline.TypeAnalysis
                                                  constructorsDoneEvent.Set();
                                              });
 
+            var methodsToTest = (from m in t.GetMethods() where !m_MethodExclusions.Contains(m.Name) select m);
+
             ThreadPool.QueueUserWorkItem((w) =>
                                              {
-                                                 IEnumerable<UnitTest> methodTests = TestMethods(t.GetMethods());
+                                                 IEnumerable<UnitTest> methodTests = TestMethods(methodsToTest.ToArray());
                                                  lock (tests)
                                                  {
                                                      tests.AddRange(methodTests);
@@ -76,7 +81,7 @@ namespace Baseline.TypeAnalysis
                         ThreadPool.QueueUserWorkItem(w =>
                                                          {
                                                              ParameterInfo[] parameters = method.GetParameters();
-                                                             List<List<ObjectInstance>> argumentCombinations =
+                                                             List<List<IObjectInstance>> argumentCombinations =
                                                                  CalculateCombinations(parameters);
 
                                                              foreach (var argumentCombination in argumentCombinations)
@@ -133,9 +138,9 @@ namespace Baseline.TypeAnalysis
             return tests;
         }
 
-        private IEnumerable<ObjectInstance> GetInstancesFor(MethodInfo method)
+        private IEnumerable<IObjectInstance> GetInstancesFor(MethodInfo method)
         {
-            var objs = new List<ObjectInstance>();
+            var objs = new List<IObjectInstance>();
             if (method.IsStatic)
             {
                 objs.Add(null);
@@ -164,13 +169,13 @@ namespace Baseline.TypeAnalysis
                                                          {
                                                              ParameterInfo[] parameters =
                                                                  constructorInfo.GetParameters();
-                                                             List<List<ObjectInstance>> argumentCombinations =
+                                                             List<List<IObjectInstance>> argumentCombinations =
                                                                  CalculateCombinations(parameters);
 
                                                              if (parameters.Count() == 0)
                                                              {
                                                                  //adding an empty argument list for the default constructor
-                                                                 argumentCombinations.Add(new List<ObjectInstance>());
+                                                                 argumentCombinations.Add(new List<IObjectInstance>());
                                                              }
 
 
@@ -217,9 +222,9 @@ namespace Baseline.TypeAnalysis
             return tests;
         }
 
-        private List<List<ObjectInstance>> CalculateCombinations(IEnumerable<ParameterInfo> parameters)
+        private List<List<IObjectInstance>> CalculateCombinations(IEnumerable<ParameterInfo> parameters)
         {
-            List<List<ObjectInstance>> rangeOfArgumentValues =
+            List<List<IObjectInstance>> rangeOfArgumentValues =
                 parameters.Select(param => m_RangeCalculator.GetTestValues(param.ParameterType)).ToList();
 
             return CalculateCombinations(rangeOfArgumentValues);
@@ -256,27 +261,27 @@ namespace Baseline.TypeAnalysis
             return testSuites;
         }
 
-        public static List<List<ObjectInstance>> CalculateCombinations(List<List<ObjectInstance>> input)
+        public static List<List<IObjectInstance>> CalculateCombinations(List<List<IObjectInstance>> input)
         {
-            List<List<ObjectInstance>> combinations = CalculateCombinations(input, 0);
+            List<List<IObjectInstance>> combinations = CalculateCombinations(input, 0);
             combinations.ForEach(l => l.Reverse());
             return combinations;
         }
 
         // i is used for recursion, for the initial call this should be 0
-        private static List<List<ObjectInstance>> CalculateCombinations(List<List<ObjectInstance>> input, int i)
+        private static List<List<IObjectInstance>> CalculateCombinations(List<List<IObjectInstance>> input, int i)
         {
             // stop condition
             if (i == input.Count)
             {
                 // return a list with an empty list
-                var r = new List<List<ObjectInstance>>();
-                r.Add(new List<ObjectInstance>());
+                var r = new List<List<IObjectInstance>>();
+                r.Add(new List<IObjectInstance>());
                 return r;
             }
 
-            var result = new List<List<ObjectInstance>>();
-            List<List<ObjectInstance>> recursive = CalculateCombinations(input, i + 1); // recursive call
+            var result = new List<List<IObjectInstance>>();
+            List<List<IObjectInstance>> recursive = CalculateCombinations(input, i + 1); // recursive call
 
             // for each element of the first list of input
             for (int j = 0; j < input[i].Count; j++)
@@ -285,8 +290,8 @@ namespace Baseline.TypeAnalysis
                 for (int k = 0; k < recursive.Count; k++)
                 {
                     // copy a combination from recursive
-                    var newList = new List<ObjectInstance>();
-                    foreach (ObjectInstance obj in recursive[k]) newList.Add(obj);
+                    var newList = new List<IObjectInstance>();
+                    foreach (IObjectInstance obj in recursive[k]) newList.Add(obj);
                     // add element of the first list
                     newList.Add(input[i][j]);
                     // add new combination to result
@@ -298,11 +303,11 @@ namespace Baseline.TypeAnalysis
         }
 
 
-        public static object[] GetArguments(List<ObjectInstance> paramCombination)
+        public static object[] GetArguments(List<IObjectInstance> paramCombination)
         {
             var arguments = new List<object>();
 
-            foreach (ObjectInstance objectInstance in paramCombination)
+            foreach (IObjectInstance objectInstance in paramCombination)
             {
                 arguments.Add(objectInstance.Instance);
             }

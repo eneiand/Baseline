@@ -22,10 +22,10 @@ namespace Baseline.TypeAnalysis
         public static readonly Type DECIMAL_TYPE = typeof(Decimal);
         public static readonly Type OBJECT_TYPE = typeof(Object);
         public static readonly Type STRING_TYPE = typeof(String);
-     
 
 
-        public List<ObjectInstance> GetTestValues(Type t)
+
+        public List<IObjectInstance> GetTestValues(Type t)
         {
             if (t.IsEnum)
                 return GetEnumTestValues(t);
@@ -64,39 +64,39 @@ namespace Baseline.TypeAnalysis
             return GetTestValuesFor(t);
         }
 
-        protected abstract List<ObjectInstance> GetEnumTestValues(Type type);
+        protected abstract List<IObjectInstance> GetEnumTestValues(Type type);
 
 
-        protected abstract List<ObjectInstance> GetTestValuesFor(Type type);
+        protected abstract List<IObjectInstance> GetTestValuesFor(Type type);
 
-        protected abstract List<ObjectInstance> GetStringTestValues();
+        protected abstract List<IObjectInstance> GetStringTestValues();
 
-        protected abstract List<ObjectInstance> GetObjectTestValues();
+        protected abstract List<IObjectInstance> GetObjectTestValues();
 
-        protected abstract List<ObjectInstance> GetDecimalTestValues();
+        protected abstract List<IObjectInstance> GetDecimalTestValues();
 
-        protected abstract List<ObjectInstance> GetBoolTestValues();
+        protected abstract List<IObjectInstance> GetBoolTestValues();
 
-        protected abstract List<ObjectInstance> GetDoubleTestValues();
+        protected abstract List<IObjectInstance> GetDoubleTestValues();
 
-        protected abstract List<ObjectInstance> GetFloatTestValues();
+        protected abstract List<IObjectInstance> GetFloatTestValues();
 
-        protected abstract List<ObjectInstance> GetCharTestValues();
+        protected abstract List<IObjectInstance> GetCharTestValues();
 
-        protected abstract List<ObjectInstance> GetULongTestValues();
+        protected abstract List<IObjectInstance> GetULongTestValues();
 
-        protected abstract List<ObjectInstance> GetLongTestValues();
+        protected abstract List<IObjectInstance> GetLongTestValues();
 
-        protected abstract List<ObjectInstance> GetUIntTestValues();
+        protected abstract List<IObjectInstance> GetUIntTestValues();
 
-        protected abstract List<ObjectInstance> GetIntTestValues();
+        protected abstract List<IObjectInstance> GetIntTestValues();
 
-        protected abstract List<ObjectInstance> GetUShortTestValues();
+        protected abstract List<IObjectInstance> GetUShortTestValues();
 
-        protected abstract List<ObjectInstance> GetShortTestValues();
+        protected abstract List<IObjectInstance> GetShortTestValues();
 
-        protected abstract List<ObjectInstance> GetByteTestValues();
+        protected abstract List<IObjectInstance> GetByteTestValues();
 
-        protected abstract List<ObjectInstance> GetSByteTestValues();
+        protected abstract List<IObjectInstance> GetSByteTestValues();
     }
 }

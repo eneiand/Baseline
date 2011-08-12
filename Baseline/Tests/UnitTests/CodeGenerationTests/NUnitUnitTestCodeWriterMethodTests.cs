@@ -31,6 +31,10 @@ namespace Tests.UnitTests.CodeGenerationTests
         {
         }
 
+        public void MethodCalledWithNull(OtherType a)
+        {
+        }
+
         public OtherType MethodReturningAComplexType()
         {
             return new OtherType();
@@ -57,6 +61,7 @@ namespace Tests.UnitTests.CodeGenerationTests
         private MethodTest m_MethodTakingAComplexTypeTest;
         private MethodTest m_MethodReturningAComplexTypeTest;
         private MethodTest m_MethodReturningNullTest;
+        private MethodTest m_MethodCalledWithNullTest;
 
 
         private MethodInfo m_SimpleMethod;
@@ -65,6 +70,7 @@ namespace Tests.UnitTests.CodeGenerationTests
         private MethodInfo m_MethodTakingAComplexType;
         private MethodInfo m_MethodReturningAComplexType;
         private MethodInfo m_MethodReturningNull;
+        private MethodInfo m_MethodCalledWithNull;
 
 
         private MethodTestsType m_TargetInstance = new MethodTestsType();
@@ -89,6 +95,7 @@ namespace Tests.UnitTests.CodeGenerationTests
             m_MethodTakingAComplexType = m_TypeUnderTest.GetMethod("MethodTakingAComplexType");
             m_MethodReturningAComplexType = m_TypeUnderTest.GetMethod("MethodReturningAComplexType");
             m_MethodReturningNull = m_TypeUnderTest.GetMethod("MethodReturningNull");
+            m_MethodCalledWithNull = m_TypeUnderTest.GetMethod("MethodCalledWithNull");
 
             m_TargetInstanceMeta = new ObjectInstance(m_TargetInstance, new ObjectCreationData(m_TypeUnderTest.GetConstructor(Type.EmptyTypes)));
             m_OtherTypeMeta = new ObjectInstance(m_OtherType, new ObjectCreationData(typeof(OtherType).GetConstructor(Type.EmptyTypes)));

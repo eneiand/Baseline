@@ -32,6 +32,8 @@ namespace TestAssembly.Mocks
             return 1;
         }
 
+        public Int32 Prop1 { get { return 1; } }
+
         public void ExceptionThrower()
         {
             throw new AbandonedMutexException();

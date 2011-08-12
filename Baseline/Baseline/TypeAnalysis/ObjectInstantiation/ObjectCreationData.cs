@@ -8,20 +8,20 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
     //contains the information about how an ObjectInstance is created
     public class ObjectCreationData
     {
-       
-        private List<ObjectInstance> m_Arguments;
 
-        public ObjectCreationData(ConstructorInfo constructorInfo, IEnumerable<ObjectInstance> arguments = null)
+        private List<IObjectInstance> m_Arguments;
+
+        public ObjectCreationData(ConstructorInfo constructorInfo, IEnumerable<IObjectInstance> arguments = null)
         {
             if (constructorInfo == null) throw new ArgumentNullException("constructorInfo");
 
             Constructor = constructorInfo;
 
             if (arguments != null){
-                m_Arguments = new List<ObjectInstance>(arguments);
+                m_Arguments = new List<IObjectInstance>(arguments);
             }
             else{
-                m_Arguments = new List<ObjectInstance>();
+                m_Arguments = new List<IObjectInstance>();
             }
 
             var parameters = constructorInfo.GetParameters();
@@ -44,7 +44,7 @@ namespace Baseline.TypeAnalysis.ObjectInstantiation
             private set;
         }
 
-        public List<ObjectInstance> Arguments
+        public List<IObjectInstance> Arguments
         {
             get
             {

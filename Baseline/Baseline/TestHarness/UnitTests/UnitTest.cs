@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 
 namespace Baseline.TestHarness.UnitTests
 {
     public abstract class UnitTest
     {
-         protected UnitTest(TimeSpan runningTime, MethodBase method, ObjectInstance instance = null,  IEnumerable<ObjectInstance> arguments = null, Object result = null)
+        private static long m_GlobalId = 0;
+
+        protected long m_id;
+
+        protected UnitTest(TimeSpan runningTime, MethodBase method, IObjectInstance instance = null, IEnumerable<IObjectInstance> arguments = null, Object result = null)
         {
   
             RunningTime = runningTime;
@@ -17,9 +22,9 @@ namespace Baseline.TestHarness.UnitTests
             Method = method;
 
             if (arguments == null)
-                Arguments = new List<ObjectInstance>();
+                Arguments = new List<IObjectInstance>();
             else
-                Arguments = new List<ObjectInstance>(arguments);
+                Arguments = new List<IObjectInstance>(arguments);
 
             var parameterList = new List<ParameterInfo>(method.GetParameters());
 
@@ -28,7 +33,7 @@ namespace Baseline.TestHarness.UnitTests
 
             for (int i = 0; i < parameterList.Count; ++i)
             {
-                if (!parameterList[i].ParameterType.IsAssignableFrom(Arguments[i].Instance.GetType()))
+                if (!(Arguments[i] is NullObjectInstance) && !parameterList[i].ParameterType.IsAssignableFrom(Arguments[i].Instance.GetType()))
                     throw new ArgumentException("argument types do not match parameter types");
             }
 
@@ -41,6 +46,8 @@ namespace Baseline.TestHarness.UnitTests
             }
              Result = result;
              Instance = instance;
+
+             m_id = Interlocked.Increment(ref m_GlobalId);
         }
 
         public TimeSpan RunningTime
@@ -55,13 +62,13 @@ namespace Baseline.TestHarness.UnitTests
             private set;
         }
 
-        public List<ObjectInstance> Arguments
+        public List<IObjectInstance> Arguments
         {
             get;
             private set;
         }
 
-        public ObjectInstance Instance
+        public IObjectInstance Instance
         {
             get; private set; 
         }
@@ -70,7 +77,7 @@ namespace Baseline.TestHarness.UnitTests
 
         public virtual String Name
         {
-            get { return String.Format("{0}Test",  this.Method.Name); }
+            get { return String.Format("{0}Test{1}",  this.Method.Name, this.m_id); }
         }
     }
 }

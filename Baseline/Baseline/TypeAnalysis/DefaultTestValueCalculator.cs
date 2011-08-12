@@ -8,9 +8,9 @@ namespace Baseline.TypeAnalysis
 {
     public class DefaultTestValueCalculator : TestValueCalculator
     {
-        protected override List<ObjectInstance> GetTestValuesFor(Type type)
+        protected override List<IObjectInstance> GetTestValuesFor(Type type)
         {
-            var values = new List<ObjectInstance>();
+            var values = new List<IObjectInstance>();
 
             ConstructorInfo[] constructors = type.GetConstructors();
 
@@ -20,10 +20,10 @@ namespace Baseline.TypeAnalysis
 
                 if (parameterInfos.Count() != 0)
                 {
-                    List<List<ObjectInstance>> rangeOfParameterValues =
+                    List<List<IObjectInstance>> rangeOfParameterValues =
                         parameterInfos.Select(param => this.GetTestValues(param.ParameterType)).ToList();
 
-                    List<List<ObjectInstance>> paramCombinations = (Tester.CalculateCombinations(rangeOfParameterValues));
+                    List<List<IObjectInstance>> paramCombinations = (Tester.CalculateCombinations(rangeOfParameterValues));
 
                     foreach (var paramCombination in paramCombinations)
                     {
@@ -36,10 +36,10 @@ namespace Baseline.TypeAnalysis
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("Exception thrown trying to call constructor " + constructor
-                                              + " with values "
-                                              + paramCombination);
-                            Console.WriteLine(e.ToString());
+                            //Console.WriteLine("Exception thrown trying to call constructor " + constructor
+                            //                  + " with values "
+                            //                  + paramCombination);
+                            //Console.WriteLine(e.ToString());
                         }
                     }
                 }
@@ -65,9 +65,9 @@ namespace Baseline.TypeAnalysis
 
 
 
-        protected override List<ObjectInstance> GetEnumTestValues(Type type)
+        protected override List<IObjectInstance> GetEnumTestValues(Type type)
         {
-            List<ObjectInstance> vals = new List<ObjectInstance>();
+            List<IObjectInstance> vals = new List<IObjectInstance>();
 
             foreach (object enumValue in type.GetEnumValues())
             {
@@ -78,20 +78,21 @@ namespace Baseline.TypeAnalysis
         }
 
 
-        protected override List<ObjectInstance> GetStringTestValues()
+        protected override List<IObjectInstance> GetStringTestValues()
         {
-            return new List<ObjectInstance>()
+            return new List<IObjectInstance>()
             {
                 new ObjectInstance(""),
                 new ObjectInstance(@" "),
                 new ObjectInstance("TEST_STRING"),
-                new ObjectInstance("1234567890")
+                new ObjectInstance("1234567890"),
+                new NullObjectInstance()
             };
         }
 
-        protected override List<ObjectInstance> GetObjectTestValues()
+        protected override List<IObjectInstance> GetObjectTestValues()
         {
-            var vals = new List<ObjectInstance>(GetStringTestValues());
+            var vals = new List<IObjectInstance>(GetStringTestValues());
 
             vals.AddRange(GetDecimalTestValues());
             vals.AddRange(GetBoolTestValues());
@@ -99,10 +100,10 @@ namespace Baseline.TypeAnalysis
             return vals;
         }
 
-        protected override List<ObjectInstance> GetDecimalTestValues()
+        protected override List<IObjectInstance> GetDecimalTestValues()
         {
             var vals = GetMaxAndMin(DECIMAL_TYPE);
-            vals.AddRange(new List<ObjectInstance>()
+            vals.AddRange(new List<IObjectInstance>()
             {
                 new ObjectInstance(Decimal.MinusOne),
                 new ObjectInstance(Decimal.Zero),
@@ -112,78 +113,78 @@ namespace Baseline.TypeAnalysis
             return vals;
         }
 
-        protected override List<ObjectInstance> GetBoolTestValues()
+        protected override List<IObjectInstance> GetBoolTestValues()
         {
-            return new List<ObjectInstance>()
+            return new List<IObjectInstance>()
             {
                 new ObjectInstance(true),
                 new ObjectInstance(false)
             };
         }
 
-        protected override List<ObjectInstance> GetDoubleTestValues()
+        protected override List<IObjectInstance> GetDoubleTestValues()
         {
             return GetMaxAndMin(DOUBLE_TYPE);
         }
 
-        protected override List<ObjectInstance> GetFloatTestValues()
+        protected override List<IObjectInstance> GetFloatTestValues()
         {
             return GetMaxAndMin(FLOAT_TYPE);
         }
 
-        protected override List<ObjectInstance> GetCharTestValues()
+        protected override List<IObjectInstance> GetCharTestValues()
         {
-            return GetMaxAndMin(CHAR_TYPE);
+            return new List<IObjectInstance>(){new ObjectInstance('a'), new ObjectInstance('z'), new ObjectInstance('0'), new ObjectInstance('1'), new ObjectInstance(' ')};
         }
 
-        protected override List<ObjectInstance> GetULongTestValues()
+        protected override List<IObjectInstance> GetULongTestValues()
         {
             return GetMaxAndMin(ULONG_TYPE);
         }
 
-        protected override List<ObjectInstance> GetLongTestValues()
+        protected override List<IObjectInstance> GetLongTestValues()
         {
             return GetMaxAndMin(LONG_TYPE);
         }
 
-        protected override List<ObjectInstance> GetUIntTestValues()
+        protected override List<IObjectInstance> GetUIntTestValues()
         {
             return GetMaxAndMin(UINT_TYPE);
 
         }
 
-        protected override List<ObjectInstance> GetIntTestValues()
+        protected override List<IObjectInstance> GetIntTestValues()
         {
             return GetMaxAndMin(INT_TYPE);
         }
 
-        protected override List<ObjectInstance> GetUShortTestValues()
+        protected override List<IObjectInstance> GetUShortTestValues()
         {
             return GetMaxAndMin(USHORT_TYPE);
 
         }
 
-        protected override List<ObjectInstance> GetShortTestValues()
+        protected override List<IObjectInstance> GetShortTestValues()
         {
             return GetMaxAndMin(SHORT_TYPE);
 
         }
 
-        protected override List<ObjectInstance> GetByteTestValues()
+        protected override List<IObjectInstance> GetByteTestValues()
         {
             return GetMaxAndMin(BYTE_TYPE);
 
         }
 
-        protected override List<ObjectInstance> GetSByteTestValues()
+        protected override List<IObjectInstance> GetSByteTestValues()
         {
             return GetMaxAndMin(SBYTE_TYPE);
 
         }
 
-        private static List<ObjectInstance> GetMaxAndMin(Type t)
+        private static List<IObjectInstance> GetMaxAndMin(Type t)
         {
-            return new List<ObjectInstance>()
+            return new List<IObjectInstance>()
             {
                 new ObjectInstance(t.GetField("MaxValue").GetValue(null)),
                 new ObjectInstance(t.GetField("MinValue").GetValue(null))

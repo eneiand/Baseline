@@ -8,9 +8,9 @@ namespace Baseline.TestHarness.UnitTests
 {
     public sealed class ExceptionThrowingTest : UnitTest
     {
-        
-        public ExceptionThrowingTest(TimeSpan runningTime, MethodBase method, Exception thrownException, ObjectInstance instance = null,
-                                     IEnumerable<ObjectInstance> arguments = null)
+
+        public ExceptionThrowingTest(TimeSpan runningTime, MethodBase method, Exception thrownException, IObjectInstance instance = null,
+                                     IEnumerable<IObjectInstance> arguments = null)
             : base(runningTime, method, instance, arguments)
         {
             if (thrownException == null) throw new ArgumentNullException("thrownException");
@@ -25,7 +25,7 @@ namespace Baseline.TestHarness.UnitTests
 
         public override string Name
         {
-            get { return String.Format("{0}ThrowsExceptionTest",  this.Method.Name); }
+            get { return String.Format("{0}ThrowsExceptionTest{1}",  this.Method.Name, this.m_id); }
         }
     }
 }
