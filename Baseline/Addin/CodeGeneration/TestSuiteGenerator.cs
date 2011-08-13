@@ -27,8 +27,8 @@ namespace Addin.CodeGeneration
 	foreach (var requiredNamespace in this.NamespacesRequired)
 	{
 	    this.WriteLine("using " + requiredNamespace + ";");
-    }	 
-
+    }
+    this.WriteLine("");
 WriteLine("namespace " + TestSuite.Type.Name + "Tests");
 WriteLine("{");
 this.PushIndent(INDENT);

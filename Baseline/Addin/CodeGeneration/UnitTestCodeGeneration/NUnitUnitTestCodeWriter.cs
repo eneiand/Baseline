@@ -210,10 +210,11 @@ namespace Baseline.CodeGeneration.UnitTestCodeGeneration
             {
                 var propertyInfo = properties[i];
 
-                if (propertyInfo.CanRead)
+                if (propertyInfo.CanRead && propertyInfo.GetIndexParameters().Length == 0)
                 {
                     try
                     {
+                        
                         Object propertyVal = propertyInfo.GetGetMethod().Invoke(result, null);
 
                         if(propertyVal == null)

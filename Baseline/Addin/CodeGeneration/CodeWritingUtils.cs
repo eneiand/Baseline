@@ -65,6 +65,8 @@ namespace Baseline.CodeGeneration
                     return instance.Instance.GetType().Name + "." + instance.Instance.ToString();
                 else if (instance is NullObjectInstance)
                     return "null";
+                else if (instance.Instance is bool)
+                    return instance.ToString().ToLower();
                 else
                     return instance.Instance.ToString();
             }
@@ -74,6 +76,9 @@ namespace Baseline.CodeGeneration
 
         public static String GetObjectCreationExpression(Object instance)
         {
+            if (instance == null)
+                    return "null";
+
             var typeOfInstance = instance.GetType();
 
             if(!ObjectInstance.NeedsConstructor(typeOfInstance))
@@ -82,6 +87,11 @@ namespace Baseline.CodeGeneration
                     return "\"" + instance + "\"";
                 else if (instance is char)
                     return "'" + instance + "'";
+                else if (instance is Enum)
+                    return instance.GetType().Name + "." + instance.ToString();
+
+                else if (instance is bool)
+                    return instance.ToString().ToLower();
                 else
                     return instance.ToString();
             }

@@ -1,3 +1,4 @@
+C:\NA\Baseline\Baseline\Addin\bin\Debug\Addin.dll.config
 C:\NA\Baseline\Baseline\Addin\bin\Debug\Addin.dll
 C:\NA\Baseline\Baseline\Addin\bin\Debug\Addin.pdb
 C:\NA\Baseline\Baseline\Addin\bin\Debug\Addin.xml
@@ -5,4 +6,3 @@ C:\NA\Baseline\Baseline\Addin\obj\Debug\ResolveAssemblyReference.cache
 C:\NA\Baseline\Baseline\Addin\obj\Debug\Addin.csproj.ResolveComReference.cache
 C:\NA\Baseline\Baseline\Addin\obj\Debug\Addin.dll
 C:\NA\Baseline\Baseline\Addin\obj\Debug\Addin.pdb
-C:\NA\Baseline\Baseline\Addin\bin\Debug\Addin.dll.config
