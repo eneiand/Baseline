@@ -58,8 +58,9 @@ namespace Baseline.TypeAnalysis
                                                  methodsDoneEvent.Set();
                                              });
 
-
-            WaitHandle.WaitAll(new WaitHandle[] {constructorsDoneEvent, methodsDoneEvent});
+            methodsDoneEvent.WaitOne();
+            constructorsDoneEvent.WaitOne();
+          //  WaitHandle.WaitAll(new WaitHandle[] {constructorsDoneEvent, methodsDoneEvent});
 
             return new TestSuite(t, tests);
         }

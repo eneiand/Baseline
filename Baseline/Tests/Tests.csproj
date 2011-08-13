@@ -68,9 +68,9 @@
     <Folder Include="IntegrationTests\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Baseline\Baseline.csproj">
-      <Project>{CA7BA605-2359-4D6A-9A0D-7A120B3D3AEC}</Project>
-      <Name>Baseline</Name>
+    <ProjectReference Include="..\Addin\Addin.csproj">
+      <Project>{F82F7892-9702-42BE-B06C-6DA4D47F44D3}</Project>
+      <Name>Addin</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestAssembly\TestAssembly.csproj">
       <Project>{B83070AB-48AA-465C-8EDA-4A9DB3BEE80E}</Project>

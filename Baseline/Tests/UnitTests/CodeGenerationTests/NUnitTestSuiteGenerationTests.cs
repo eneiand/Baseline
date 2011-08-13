@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Addin.CodeGeneration;
 using Baseline.CodeGeneration;
 using Baseline.CodeGeneration.UnitTestCodeGeneration;
 using Baseline.TestHarness;

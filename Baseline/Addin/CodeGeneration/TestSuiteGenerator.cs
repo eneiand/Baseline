@@ -7,85 +7,27 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Baseline.CodeGeneration
+namespace Addin.CodeGeneration
 {
     using Baseline.TestHarness.UnitTests;
+    using Baseline.TestHarness;
     using System;
     
     
-    #line 1 "D:\NA\dev\Baseline\Baseline\Baseline\CodeGeneration\TestSuiteGenerator.tt"
+    #line 1 "C:\NA\Baseline\Baseline\Addin\CodeGeneration\TestSuiteGenerator.tt"
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "10.0.0.0")]
     public partial class TestSuiteGenerator : TestSuiteGeneratorBase
     {
-        #region ToString Helpers
-        /// <summary>
-        /// Utility class to produce culture-oriented representation of an object as a string.
-        /// </summary>
-        public class ToStringInstanceHelper
-        {
-            private System.IFormatProvider formatProviderField  = global::System.Globalization.CultureInfo.InvariantCulture;
-            /// <summary>
-            /// Gets or sets format provider to be used by ToStringWithCulture method.
-            /// </summary>
-            public System.IFormatProvider FormatProvider
-            {
-                get
-                {
-                    return this.formatProviderField ;
-                }
-                set
-                {
-                    if ((value != null))
-                    {
-                        this.formatProviderField  = value;
-                    }
-                }
-            }
-            /// <summary>
-            /// This is called from the compile/run appdomain to convert objects within an expression block to a string
-            /// </summary>
-            public string ToStringWithCulture(object objectToConvert)
-            {
-                if ((objectToConvert == null))
-                {
-                    throw new global::System.ArgumentNullException("objectToConvert");
-                }
-                System.Type t = objectToConvert.GetType();
-                System.Reflection.MethodInfo method = t.GetMethod("ToString", new System.Type[] {
-                            typeof(System.IFormatProvider)});
-                if ((method == null))
-                {
-                    return objectToConvert.ToString();
-                }
-                else
-                {
-                    return ((string)(method.Invoke(objectToConvert, new object[] {
-                                this.formatProviderField })));
-                }
-            }
-        }
-        private ToStringInstanceHelper toStringHelperField = new ToStringInstanceHelper();
-        public ToStringInstanceHelper ToStringHelper
-        {
-            get
-            {
-                return this.toStringHelperField;
-            }
-        }
-        #endregion
         public virtual string TransformText()
         {
-            this.GenerationEnvironment = null;
-            this.Write("using NUnit.Framework;\r\nusing ");
+            this.Write("using NUnit.Framework;\r\n");
             
-            #line 4 "D:\NA\dev\Baseline\Baseline\Baseline\CodeGeneration\TestSuiteGenerator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(TestSuite.Type.FullName));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\r\n");
-            
-            #line 6 "D:\NA\dev\Baseline\Baseline\Baseline\CodeGeneration\TestSuiteGenerator.tt"
+            #line 5 "C:\NA\Baseline\Baseline\Addin\CodeGeneration\TestSuiteGenerator.tt"
+
+	foreach (var requiredNamespace in this.NamespacesRequired)
+	{
+	    this.WriteLine("using " + requiredNamespace + ";");
+    }	 
 
 WriteLine("namespace " + TestSuite.Type.Name + "Tests");
 WriteLine("{");
@@ -323,6 +265,62 @@ WriteLine("}");
         {
             this.indentLengths.Clear();
             this.currentIndentField = "";
+        }
+        #endregion
+        #region ToString Helpers
+        /// <summary>
+        /// Utility class to produce culture-oriented representation of an object as a string.
+        /// </summary>
+        public class ToStringInstanceHelper
+        {
+            private System.IFormatProvider formatProviderField  = global::System.Globalization.CultureInfo.InvariantCulture;
+            /// <summary>
+            /// Gets or sets format provider to be used by ToStringWithCulture method.
+            /// </summary>
+            public System.IFormatProvider FormatProvider
+            {
+                get
+                {
+                    return this.formatProviderField ;
+                }
+                set
+                {
+                    if ((value != null))
+                    {
+                        this.formatProviderField  = value;
+                    }
+                }
+            }
+            /// <summary>
+            /// This is called from the compile/run appdomain to convert objects within an expression block to a string
+            /// </summary>
+            public string ToStringWithCulture(object objectToConvert)
+            {
+                if ((objectToConvert == null))
+                {
+                    throw new global::System.ArgumentNullException("objectToConvert");
+                }
+                System.Type t = objectToConvert.GetType();
+                System.Reflection.MethodInfo method = t.GetMethod("ToString", new System.Type[] {
+                            typeof(System.IFormatProvider)});
+                if ((method == null))
+                {
+                    return objectToConvert.ToString();
+                }
+                else
+                {
+                    return ((string)(method.Invoke(objectToConvert, new object[] {
+                                this.formatProviderField })));
+                }
+            }
+        }
+        private ToStringInstanceHelper toStringHelperField = new ToStringInstanceHelper();
+        public ToStringInstanceHelper ToStringHelper
+        {
+            get
+            {
+                return this.toStringHelperField;
+            }
         }
         #endregion
     }

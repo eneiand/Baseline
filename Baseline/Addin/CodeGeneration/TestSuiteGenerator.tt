@@ -1,9 +1,13 @@
 ﻿<#@ template language="C#" #>
 <#@ import namespace="Baseline.TestHarness.UnitTests" #>
+<#@ import namespace="Baseline.TestHarness" #>
 using NUnit.Framework;
-using <#=  TestSuite.Type.FullName #>
-
 <#
+	foreach (var requiredNamespace in this.NamespacesRequired)
+	{
+	    this.WriteLine("using " + requiredNamespace + ";");
+    }	 
+
 WriteLine("namespace " + TestSuite.Type.Name + "Tests");
 WriteLine("{");
 this.PushIndent(INDENT);

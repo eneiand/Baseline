@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
+using Addin.CodeGeneration;
 using Baseline.TestHarness.UnitTests;
 using Baseline.TypeAnalysis.ObjectInstantiation;
 

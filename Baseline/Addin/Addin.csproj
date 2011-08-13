@@ -37,10 +37,6 @@
     <RootNamespace>Addin</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Baseline">
-      <HintPath>..\Baseline\bin\Debug\Baseline.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -57,9 +53,36 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeGeneration\CodeWritingUtils.cs" />
+    <Compile Include="CodeGeneration\TestSuiteGenerator.cs">
+      <DependentUpon>TestSuiteGenerator.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="CodeGeneration\TestSuiteGenerator_CustomConstruction.cs" />
+    <Compile Include="CodeGeneration\UnitTestCodeGeneration\NUnitUnitTestCodeWriter.cs" />
+    <Compile Include="CodeGeneration\UnitTestCodeGeneration\UnitTestCodeWriter.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controller.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="TestHarness\TestSuite.cs" />
+    <Compile Include="TestHarness\UnitTests\ConstructorTest.cs" />
+    <Compile Include="TestHarness\UnitTests\ExceptionThrowingTest.cs" />
+    <Compile Include="TestHarness\UnitTests\MethodTest.cs" />
+    <Compile Include="TestHarness\UnitTests\UnitTest.cs" />
+    <Compile Include="TypeAnalysis\DefaultTestValueCalculator.cs" />
+    <Compile Include="TypeAnalysis\MethodCalling\MethodCall.cs" />
+    <Compile Include="TypeAnalysis\MethodCalling\MethodCalls.cs" />
+    <Compile Include="TypeAnalysis\ObjectInstantiation\ObjectCreationData.cs" />
+    <Compile Include="TypeAnalysis\ObjectInstantiation\ObjectInstance.cs" />
+    <Compile Include="TypeAnalysis\Tester.cs" />
+    <Compile Include="TypeAnalysis\TestValueCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -124,6 +147,22 @@
     <Content Include="Addin.AddIn">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CodeGeneration\TestSuiteGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>TestSuiteGenerator.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

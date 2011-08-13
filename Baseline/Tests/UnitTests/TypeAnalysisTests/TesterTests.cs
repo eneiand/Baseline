@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Addin.CodeGeneration;
 using Baseline.CodeGeneration;
 using Baseline.CodeGeneration.UnitTestCodeGeneration;
 using Baseline.TypeAnalysis;
