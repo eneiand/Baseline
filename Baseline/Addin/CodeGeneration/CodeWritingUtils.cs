@@ -67,6 +67,8 @@ namespace Baseline.CodeGeneration
                     return "null";
                 else if (instance.Instance is bool)
                     return instance.ToString().ToLower();
+                else if (instance.Instance is Decimal)
+                    return instance.Instance.ToString() + "M";
                 else
                     return instance.Instance.ToString();
             }

@@ -23,7 +23,7 @@ namespace Baseline.TypeAnalysis
             m_MethodExclusions = methodExclusions;
         }
 
-        public Tester() : this(new DefaultTestValueCalculator(), new List<string>(){"GetType"})
+        public Tester() : this(new DefaultTestValueCalculator(), new List<string>(){"GetType", "GetHashCode"})
         {
         }
 
