@@ -108,14 +108,23 @@ namespace Baseline.CodeGeneration
         {
             List<IObjectInstance> argumentList = arguments == null ? new List<IObjectInstance>() : new List<IObjectInstance>(arguments);
 
+            //I think it's a property
+            String methodName = method.IsSpecialName ? method.Name.Substring(method.Name.IndexOf('_') + 1) : method.Name;
+ 
+
             StringBuilder code = new StringBuilder();
-            code.AppendFormat("{0}.{1}(", entityToCallMethodOn, method.Name);
-            for (int i = 0; i < argumentList.Count; ++i)
+            code.AppendFormat("{0}.{1}", entityToCallMethodOn, methodName);
+
+            if (!method.IsSpecialName)
             {
-                code.AppendFormat("{0}{1}", GetObjectCreationExpression(argumentList[i]),
-                                  i != argumentList.Count - 1 ? ", " : String.Empty);
+                code.Append("(");
+                for (int i = 0; i < argumentList.Count; ++i)
+                {
+                    code.AppendFormat("{0}{1}", GetObjectCreationExpression(argumentList[i]),
+                                      i != argumentList.Count - 1 ? ", " : String.Empty);
+                }
+                code.Append(")");
             }
-            code.Append(")");
             return code.ToString();
         }
 
