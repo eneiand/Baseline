@@ -29,7 +29,7 @@ namespace Addin.CodeGeneration
 	    this.WriteLine("using " + requiredNamespace + ";");
     }
     this.WriteLine("");
-WriteLine("namespace " + TestSuite.Type.Name + "Tests");
+WriteLine("namespace " + NamespaceToUse);
 WriteLine("{");
 this.PushIndent(INDENT);
 WriteLine(this.ClassAttribute);

@@ -94,7 +94,7 @@ namespace Baseline.TypeAnalysis
         {
             var vals = new List<IObjectInstance>(GetStringTestValues());
 
-            vals.AddRange(GetDecimalTestValues());
+            vals.AddRange(GetIntTestValues());
             vals.AddRange(GetBoolTestValues());
 
             return vals;

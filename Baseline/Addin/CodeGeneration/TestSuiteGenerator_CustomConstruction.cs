@@ -12,20 +12,28 @@ namespace Addin.CodeGeneration
         private TestSuite TestSuite { get; set; }
         private HashSet<String> NamespacesRequired { get { return _mNamespacesUsed; } }
         private UnitTestCodeWriter UnitTestCodeWriter { get; set; }
+        public string NamespaceToUse { get; set; }
         private string ClassAttribute { get; set; }
 
         public const String INDENT = "    ";
 
         private HashSet<String> _mNamespacesUsed = new HashSet<String>(); 
 
-        public TestSuiteGenerator(TestSuite tSuite, UnitTestCodeWriter unitTestCodeWriter, String classAttribute = null)
+        public TestSuiteGenerator(TestSuite tSuite, UnitTestCodeWriter unitTestCodeWriter, String namespaceToUse = null, String classAttribute = null)
         {
             this.TestSuite = tSuite;
 
             CalculateRequiredNamespaces(tSuite);
 
             UnitTestCodeWriter = unitTestCodeWriter;
+            NamespaceToUse = namespaceToUse;
             ClassAttribute = classAttribute;
+        }
+
+        public TestSuiteGenerator(TestSuite tSuite, UnitTestCodeWriter unitTestCodeWriter)
+            : this(tSuite, unitTestCodeWriter, tSuite.Type + ".Tests", "[TestFixture]")
+        {
+
         }
 
         private void CalculateRequiredNamespaces(TestSuite tSuite)
@@ -65,9 +73,6 @@ namespace Addin.CodeGeneration
             }
         }
 
-        public TestSuiteGenerator(TestSuite tSuite, UnitTestCodeWriter unitTestCodeWriter) : this(tSuite, unitTestCodeWriter, "[TestFixture]")
-        {
-
-        }
+  
     }
 }
