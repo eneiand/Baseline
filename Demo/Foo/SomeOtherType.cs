@@ -7,8 +7,10 @@ namespace Foo
 {
     public class SomeOtherType
     {
+        public SomeType SomeType { get; private set; }
         public SomeOtherType(SomeType s)
         {
+            SomeType = s;
         }
     }
 }

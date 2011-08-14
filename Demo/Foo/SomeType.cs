@@ -7,6 +7,7 @@ namespace Foo
 {
     public class SomeType
     {
+
         public string Name { get; private set; }
 
         public SomeType(String name)
@@ -35,5 +36,17 @@ namespace Foo
 
             return (String.Format("SELECT '{0}' FROM '{1}';", col, table));
         }
+
+        public SomeOtherType MethodThatReturnsNull()
+        {
+            return null;
+        }
+
+        public SomeOtherType MethodThatReturnsSomeOtherType()
+        {
+
+            return new SomeOtherType(this);
+        }
+
     }
 }
