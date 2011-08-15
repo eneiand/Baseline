@@ -17,12 +17,12 @@ namespace Foo
 
         public String StringToLower(String s)
         {
-            StringBuilder upperCaseString = new StringBuilder(String.Empty);
+            StringBuilder lowerCaseString = new StringBuilder(String.Empty);
 
             for (int i = 0; i < s.Length; ++i)
-                upperCaseString.Append(s.Substring(i, 1).ToLower() );
+                lowerCaseString.Append(s.Substring(i, 1).ToLower() );
 
-            return upperCaseString.ToString();
+            return lowerCaseString.ToString().Trim();
         }
 
         public Int32 AtoI(String s)
